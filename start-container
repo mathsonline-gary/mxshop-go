@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# Run your user_srv service
+echo "Starting user_srv service..."
+go run /app/user_srv/main.go &
+
+# Run your user_api service
+echo "Starting user_api service..."
+go run /app/user_api/main.go
