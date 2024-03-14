@@ -21,6 +21,9 @@ func main() {
 	// Init Logger
 	initialize.Logger()
 
+	// Init Config
+	initialize.Config()
+
 	// Init router
 	r := gin.Default()
 	initialize.Router(r)

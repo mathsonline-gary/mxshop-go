@@ -1,10 +1,11 @@
-package user_controller
+package controllers
 
 import (
 	"fmt"
 	"net/http"
 	"time"
 
+	"mxshop-go/user_api/global/config"
 	"mxshop-go/user_api/global/response"
 	"mxshop-go/user_api/proto"
 
@@ -14,11 +15,6 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
-)
-
-var (
-	ip   = "localhost"
-	port = 50051
 )
 
 func GrpcErrorToHttpResponse(err error, ctx *gin.Context) {
@@ -48,7 +44,7 @@ func GrpcErrorToHttpResponse(err error, ctx *gin.Context) {
 }
 
 func Index(ctx *gin.Context) {
-	ucc, err := grpc.Dial(fmt.Sprintf("%s:%d", ip, port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	ucc, err := grpc.Dial(fmt.Sprintf("%s:%d", config.ServerConfig.UserSvcConfig.Host, config.ServerConfig.UserSvcConfig.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		zap.S().Errorw("[User][Index] failed to connect to service")
 		GrpcErrorToHttpResponse(err, ctx)

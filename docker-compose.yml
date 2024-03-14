@@ -45,7 +45,7 @@ services:
       MYSQL_PASSWORD: ''
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
-      - 'sail-mysql:/var/lib/mysql'
+      - 'go-mysql:/var/lib/mysql'
 
 volumes:
   sail-mysql:

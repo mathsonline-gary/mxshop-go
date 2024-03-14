@@ -1,0 +1,4 @@
+name: 'user-api'
+user_svc:
+  host: 'localhost'
+  port: 50051
