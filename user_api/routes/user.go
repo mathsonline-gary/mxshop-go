@@ -7,6 +7,6 @@ import (
 )
 
 func InitUserRoutes(rg *gin.RouterGroup) {
-	urg := rg.Group("/users")
-	urg.GET("", user_controller.Index)
+	users := rg.Group("/users")
+	users.GET("/", user_controller.Index)
 }

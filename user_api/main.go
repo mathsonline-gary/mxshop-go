@@ -7,6 +7,7 @@ import (
 	"mxshop-go/user_api/initialize"
 
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 )
 
 var (
@@ -25,8 +26,9 @@ func main() {
 	initialize.Router(r)
 
 	// Start app
+	zap.S().Debugf("starting server at %s:%d", *ip, *port)
 	if err := r.Run(fmt.Sprintf("%s:%d", *ip, *port)); err != nil {
-		fmt.Printf("Failed to start server at %s:%d\r\n", *ip, *port)
+		zap.S().Panicf("failed to start server at %s:%d", *ip, *port)
 	}
 
 }
