@@ -48,5 +48,5 @@ services:
       - 'go-mysql:/var/lib/mysql'
 
 volumes:
-  sail-mysql:
+  go-mysql:
     driver: local

@@ -7,7 +7,6 @@ import (
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 func initConfig() {
@@ -22,7 +21,6 @@ func initConfig() {
 	if err := viper.Unmarshal(global.ServerConfig); err != nil {
 		panic(err)
 	}
-	zap.S().Debugf("Configs: %v", global.ServerConfig)
 
 	// Watcher
 	viper.OnConfigChange(func(evt fsnotify.Event) {
