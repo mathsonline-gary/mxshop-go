@@ -28,6 +28,9 @@ func main() {
 	r := gin.Default()
 	initialize.Router(r)
 
+	// Init user grpc service
+	initialize.InitUserSvcConn()
+
 	// Start app
 	zap.S().Debugf("starting server at %s:%d", *ip, *port)
 	if err := r.Run(fmt.Sprintf("%s:%d", *ip, *port)); err != nil {

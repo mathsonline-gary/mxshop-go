@@ -48,10 +48,10 @@ func main() {
 		Address: *ip,
 		Port:    *port,
 		Check: &api.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", *ip, *port),
-			Timeout:                        "5s",
-			Interval:                       "5s",
-			DeregisterCriticalServiceAfter: "15s",
+			GRPC:     fmt.Sprintf("%s:%d", *ip, *port),
+			Timeout:  "5s",
+			Interval: "10s",
+			//DeregisterCriticalServiceAfter: "30s",
 		},
 	}
 	if err := client.Agent().ServiceRegister(registration); err != nil {

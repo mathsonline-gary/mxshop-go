@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -10,9 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/status"
 )
 
@@ -43,15 +40,7 @@ func GrpcErrorToHttpResponse(err error, ctx *gin.Context) {
 }
 
 func Index(ctx *gin.Context) {
-	ucc, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSvcConfig.Host, global.ServerConfig.UserSvcConfig.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		zap.S().Errorw("[User][Index] failed to connect to service")
-		GrpcErrorToHttpResponse(err, ctx)
-		return
-	}
-
-	userServiceClient := proto.NewUserServiceClient(ucc)
-	rsp, err := userServiceClient.GetUserList(ctx, &proto.GetUserListRequest{
+	rsp, err := global.UserSvcClient.GetUserList(ctx, &proto.GetUserListRequest{
 		Page:     0,
 		PageSize: 0,
 	})
