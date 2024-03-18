@@ -5,8 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"mxshop-go/user_api/global/config"
-	"mxshop-go/user_api/global/response"
+	"mxshop-go/user_api/global"
 	"mxshop-go/user_api/proto"
 
 	"github.com/gin-gonic/gin"
@@ -44,7 +43,7 @@ func GrpcErrorToHttpResponse(err error, ctx *gin.Context) {
 }
 
 func Index(ctx *gin.Context) {
-	ucc, err := grpc.Dial(fmt.Sprintf("%s:%d", config.ServerConfig.UserSvcConfig.Host, config.ServerConfig.UserSvcConfig.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	ucc, err := grpc.Dial(fmt.Sprintf("%s:%d", global.ServerConfig.UserSvcConfig.Host, global.ServerConfig.UserSvcConfig.Port), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		zap.S().Errorw("[User][Index] failed to connect to service")
 		GrpcErrorToHttpResponse(err, ctx)
@@ -65,12 +64,12 @@ func Index(ctx *gin.Context) {
 		return
 	}
 
-	data := make([]response.UserResponse, 0)
+	data := make([]global.UserResponse, 0)
 	for _, v := range rsp.Data {
-		data = append(data, response.UserResponse{
+		data = append(data, global.UserResponse{
 			ID:       v.Id,
 			Nickname: v.Nickname,
-			Birthday: response.Birthday(time.Unix(int64(v.Birthday), 0)),
+			Birthday: global.Birthday(time.Unix(int64(v.Birthday), 0)),
 			Gender:   v.Gender,
 			Mobile:   v.Mobile,
 		})

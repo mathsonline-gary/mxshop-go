@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"mxshop-go/user_api/http/controllers"
+	"mxshop-go/user_api/controllers"
 
 	"github.com/gin-gonic/gin"
 )

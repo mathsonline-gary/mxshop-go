@@ -1,4 +1,4 @@
-package config
+package global
 
 import "mxshop-go/user_api/config"
 

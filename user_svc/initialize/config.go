@@ -3,17 +3,17 @@ package initialize
 import (
 	"fmt"
 
-	"mxshop-go/user_api/global"
+	"mxshop-go/user_svc/global"
 
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
 )
 
-func Config() {
+func initConfig() {
 	viper.SetConfigName("env")
 	viper.SetConfigType("yaml")
-	viper.AddConfigPath("user_api")
+	viper.AddConfigPath("user_svc")
 
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)

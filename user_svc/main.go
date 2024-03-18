@@ -6,18 +6,21 @@ import (
 	"log"
 	"net"
 
+	"mxshop-go/user_svc/global"
 	"mxshop-go/user_svc/handler"
+	"mxshop-go/user_svc/initialize"
 	userproto "mxshop-go/user_svc/proto"
 
 	"google.golang.org/grpc"
 )
 
-var (
-	ip = flag.String("ip", "localhost", "The user service IP")
-	port = flag.Int("port", 50051, "The user service port")
-)
-
 func main() {
+	initialize.Init()
+
+	var (
+		ip   = flag.String("ip", global.ServerConfig.AppConfig.Host, "The user service IP")
+		port = flag.Int("port", global.ServerConfig.AppConfig.Post, "The user service port")
+	)
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", *ip, *port))
 	if err != nil {

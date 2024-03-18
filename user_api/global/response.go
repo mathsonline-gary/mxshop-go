@@ -1,4 +1,4 @@
-package response
+package global
 
 import "time"
 

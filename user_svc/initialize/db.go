@@ -1,21 +1,22 @@
-package global
+package initialize
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"time"
+
+	"mxshop-go/user_svc/global"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
 
-var (
-	DB *gorm.DB
-)
+func initDB() {
+	c := global.ServerConfig.DBConfig
 
-func init() {
-	dsn := "root:@tcp(127.0.0.1:3307)/mxshop_user_svc?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", c.Username, c.Password, c.Host, c.Port, c.Database)
 
 	newLogger := logger.New(
 		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
@@ -29,10 +30,15 @@ func init() {
 	)
 
 	var err error
-	DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
+	global.DB, err = gorm.Open(mysql.Open(dsn), &gorm.Config{
 		Logger: newLogger,
 	})
 	if err != nil {
 		panic(err)
 	}
+
+	// Auto migrate models
+	//if err := global.DB.AutoMigrate(&model.User{}); err != nil {
+	//	panic(err)
+	//}
 }
