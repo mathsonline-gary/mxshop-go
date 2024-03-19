@@ -13,6 +13,8 @@ type AppConfig struct {
 	Name string `mapstructure:"name"`
 	Host string `mapstructure:"host"`
 	Port int `mapstructure:"port"`
+	Env   string `mapstructure:"env"`
+	Debug bool   `mapstructure:"debug"`
 }
 
 type ConsulConfig struct {

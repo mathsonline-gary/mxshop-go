@@ -14,6 +14,7 @@ import (
 
 	"github.com/anaskhan96/go-password-encoder"
 	"github.com/golang/protobuf/ptypes/empty"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -69,6 +70,7 @@ type UserServiceServer struct {
 }
 
 func (u *UserServiceServer) GetUserList(_ context.Context, request *userproto.GetUserListRequest) (*userproto.UserListResponse, error) {
+	zap.S().Debug("getting user list")
 	response := &userproto.UserListResponse{}
 
 	var total int64

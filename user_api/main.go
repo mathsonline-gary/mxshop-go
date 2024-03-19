@@ -29,7 +29,7 @@ func main() {
 	initialize.Router(r)
 
 	// Init user grpc service
-	initialize.InitUserSvcConn()
+	initialize.InitUserSvcClient()
 
 	// Start app
 	zap.S().Debugf("starting server at %s:%d", *ip, *port)
