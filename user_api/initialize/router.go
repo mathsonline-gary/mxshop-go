@@ -1,15 +1,18 @@
 package initialize
 
 import (
+	"fmt"
+
 	"mxshop-go/user_api/routes"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 func Router(r *gin.Engine) {
-	rg := r.Group("/v1")
+	fmt.Println("initializing routes...")
 
-	zap.S().Info("initializing user routes...")
+	rg := r.Group("/v1")
 	routes.InitUserRoutes(rg)
+
+	fmt.Println("routes initialized!")
 }

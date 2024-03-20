@@ -4,10 +4,10 @@ import (
 	"flag"
 	"fmt"
 
+	"mxshop-go/user_api/global"
 	"mxshop-go/user_api/initialize"
 
 	"github.com/gin-gonic/gin"
-	"go.uber.org/zap"
 )
 
 var (
@@ -18,13 +18,16 @@ var (
 func main() {
 	flag.Parse()
 
-	// Init Logger
-	initialize.Logger()
-
 	// Init Config
 	initialize.Config()
 
+	// Init Logger
+	initialize.Logger()
+
 	// Init router
+	if global.Config.AppConfig.Env == "production" || !global.Config.AppConfig.Debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
 	r := gin.Default()
 	initialize.Router(r)
 
@@ -32,9 +35,9 @@ func main() {
 	initialize.InitUserSvcClient()
 
 	// Start app
-	zap.S().Debugf("starting server at %s:%d", *ip, *port)
+	fmt.Printf("starting server at %s:%d", *ip, *port)
 	if err := r.Run(fmt.Sprintf("%s:%d", *ip, *port)); err != nil {
-		zap.S().Panicf("failed to start server at %s:%d", *ip, *port)
+		fmt.Printf("failed to start server at %s:%d", *ip, *port)
 	}
 
 }

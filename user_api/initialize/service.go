@@ -14,7 +14,7 @@ import (
 
 func InitUserSvcClient() {
 	conn, err := grpc.Dial(
-		fmt.Sprintf("consul://%s:%d/%s?wait=14s", global.ServerConfig.ConsulConfig.Host, global.ServerConfig.ConsulConfig.Port, global.ServerConfig.UserSvcConfig.Name),
+		fmt.Sprintf("consul://%s:%d/%s?wait=14s", global.Config.ConsulConfig.Host, global.Config.ConsulConfig.Port, global.Config.UserSvcConfig.Name),
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)

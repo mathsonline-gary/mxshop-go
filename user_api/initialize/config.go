@@ -1,34 +1,73 @@
 package initialize
 
 import (
+	"encoding/json"
 	"fmt"
 
 	"mxshop-go/user_api/global"
 
-	"github.com/fsnotify/fsnotify"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients"
+	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/spf13/viper"
-	"go.uber.org/zap"
 )
 
 func Config() {
+	fmt.Println("initializing configurations...")
+
 	viper.SetConfigName("env")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("user_api")
-
 	if err := viper.ReadInConfig(); err != nil {
 		panic(err)
 	}
 
-	if err := viper.Unmarshal(global.ServerConfig); err != nil {
+	// Get Nacos configs
+	if err := viper.UnmarshalKey("nacos.server", &global.NacosConfig.NacosServerConfig); err != nil {
 		panic(err)
 	}
-	zap.S().Debugf("Configs: %v", global.ServerConfig)
+	if err := viper.UnmarshalKey("nacos.client", &global.NacosConfig.NacosClientConfig); err != nil {
+		panic(err)
+	}
 
-	// Watcher
-	viper.OnConfigChange(func(evt fsnotify.Event) {
-		fmt.Println("config changed: " + evt.Name)
-		_ = viper.ReadInConfig()
-		_ = viper.Unmarshal(global.ServerConfig)
+	// Fetch configs from Nacos
+	nacosClientConfig := global.NacosConfig.NacosClientConfig
+	nacosServerConfig := global.NacosConfig.NacosServerConfig
+	clientConfig := constant.ClientConfig{
+		NamespaceId:         nacosClientConfig.Namespace,
+		TimeoutMs:           5000,
+		NotLoadCacheAtStart: true,
+		LogDir:              "user_api/tmp/nacos/log",
+		CacheDir:            "user_api/tmp/nacos/cache",
+		LogLevel:            "debug",
+	}
+	serverConfigs := []constant.ServerConfig{
+		{
+			IpAddr:      nacosServerConfig.Host,
+			Port:        nacosServerConfig.Port,
+			ContextPath: "/nacos",
+			Scheme:      "http",
+		},
+	}
+	configClient, err := clients.CreateConfigClient(map[string]interface{}{
+		"serverConfigs": serverConfigs,
+		"clientConfig":  clientConfig,
 	})
-	viper.WatchConfig()
+	if err != nil {
+		panic(err)
+	}
+
+	content, err := configClient.GetConfig(vo.ConfigParam{
+		DataId: nacosClientConfig.DataID,
+		Group:  nacosClientConfig.Group,
+	})
+	if err != nil {
+		panic(err)
+	}
+
+	if err := json.Unmarshal([]byte(content), &global.Config); err != nil {
+		panic(err)
+	}
+
+	fmt.Println("configurations initialized!")
 }
