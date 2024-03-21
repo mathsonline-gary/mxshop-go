@@ -14,7 +14,9 @@ import (
 )
 
 func initDB() {
-	c := global.ServerConfig.DBConfig
+	fmt.Println("DB initializing...")
+
+	c := global.Config.DBConfig
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", c.Username, c.Password, c.Host, c.Port, c.Database)
 
@@ -41,4 +43,6 @@ func initDB() {
 	//if err := global.DB.AutoMigrate(&model.User{}); err != nil {
 	//	panic(err)
 	//}
+
+	fmt.Println("DB initialized!")
 }

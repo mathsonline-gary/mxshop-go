@@ -13,7 +13,7 @@ import (
 )
 
 func Config() {
-	fmt.Println("initializing configurations...")
+	fmt.Println("configurations initializing...")
 
 	viper.SetConfigName("env")
 	viper.SetConfigType("yaml")

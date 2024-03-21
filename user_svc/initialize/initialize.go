@@ -6,19 +6,19 @@ import (
 )
 
 func Init() {
-	// Initialize logger
-	initLogger()
-
 	// Initialize config
 	initConfig()
+
+	// Initialize logger
+	initLogger()
 
 	// Initialize database
 	initDB()
 
-	// Set app port
-	if global.ServerConfig.AppConfig.Env != "production" {
+	// Set random app port for local development
+	if global.Config.AppConfig.Env == "local" {
 		if port, err := utils.GetIdlePort(); err == nil {
-			global.ServerConfig.AppConfig.Port = port
+			global.Config.AppConfig.Port = port
 		}
 	}
 }

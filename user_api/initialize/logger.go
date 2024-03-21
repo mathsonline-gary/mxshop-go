@@ -9,10 +9,10 @@ import (
 )
 
 func Logger() {
-	fmt.Println("initializing logger...")
+	fmt.Println("logger initializing...")
 
 	var logger *zap.Logger
-	if global.ServerConfig.AppConfig.Env == "production" {
+	if global.Config.AppConfig.Env == "production" {
 		logger, _ = zap.NewProduction()
 	} else {
 		logger, _ = zap.NewDevelopment()

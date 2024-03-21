@@ -9,7 +9,7 @@ import (
 )
 
 func Router(r *gin.Engine) {
-	fmt.Println("initializing routes...")
+	fmt.Println("routes initializing...")
 
 	rg := r.Group("/v1")
 	routes.InitUserRoutes(rg)

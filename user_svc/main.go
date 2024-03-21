@@ -14,7 +14,7 @@ import (
 	"mxshop-go/user_svc/initialize"
 	userproto "mxshop-go/user_svc/proto"
 
-	"github.com/hashicorp/consul/api"
+	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/go-uuid"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -26,8 +26,8 @@ func main() {
 	initialize.Init()
 
 	var (
-		ip   = flag.String("ip", global.ServerConfig.AppConfig.Host, "The user service IP")
-		port = flag.Int("port", global.ServerConfig.AppConfig.Port, "The user service port")
+		ip   = flag.String("ip", global.Config.AppConfig.Host, "The user service IP")
+		port = flag.Int("port", global.Config.AppConfig.Port, "The user service port")
 	)
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", *ip, *port))
@@ -39,28 +39,8 @@ func main() {
 	userproto.RegisterUserServiceServer(s, &handler.UserServiceServer{})
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 
-	//Register service in Consul
-	config := api.DefaultConfig()
-	config.Address = fmt.Sprintf("%s:%d", global.ServerConfig.ConsulConfig.Host, global.ServerConfig.ConsulConfig.Port)
-	client, err := api.NewClient(config)
+	client, serviceID, err := registerConsulService(*ip, *port)
 	if err != nil {
-		panic(err)
-	}
-	serviceID, _ := uuid.GenerateUUID()
-	registration := &api.AgentServiceRegistration{
-		Name:    global.ServerConfig.AppConfig.Name,
-		ID: serviceID,
-		Tags:    []string{"mxshop", "user", "svc"},
-		Address: *ip,
-		Port:    *port,
-		Check: &api.AgentServiceCheck{
-			GRPC: fmt.Sprintf("%s:%d", global.ServerConfig.ConsulConfig.UserSvc.Check.Host, *port),
-			Timeout:  "5s",
-			Interval: "10s",
-			//DeregisterCriticalServiceAfter: "30s",
-		},
-	}
-	if err := client.Agent().ServiceRegister(registration); err != nil {
 		panic(err)
 	}
 
@@ -80,4 +60,32 @@ func main() {
 		zap.S().Info("deregister user service failed")
 	}
 	zap.S().Info("deregister user service successfully")
+}
+
+func registerConsulService(addr string, port int) (client *consulAPI.Client, serviceID string, err error) {
+	config := consulAPI.DefaultConfig()
+	config.Address = fmt.Sprintf("%s:%d", global.Config.ConsulConfig.Host, global.Config.ConsulConfig.Port)
+	client, err = consulAPI.NewClient(config)
+	if err != nil {
+		return nil, "", err
+	}
+	serviceID, _ = uuid.GenerateUUID()
+	registration := &consulAPI.AgentServiceRegistration{
+		Name:    global.Config.AppConfig.Name,
+		ID:      serviceID,
+		Tags:    []string{"mxshop", "user", "svc"},
+		Address: addr,
+		Port:    port,
+		Check: &consulAPI.AgentServiceCheck{
+			GRPC:                           fmt.Sprintf("%s:%d", global.Config.ConsulConfig.UserSvc.Check.Host, port),
+			Timeout:                        "5s",
+			Interval:                       "10s",
+			DeregisterCriticalServiceAfter: "30s",
+		},
+	}
+	if err := client.Agent().ServiceRegister(registration); err != nil {
+		return nil, "", err
+	}
+
+	return client, serviceID, nil
 }
