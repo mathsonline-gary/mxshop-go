@@ -37,8 +37,8 @@ func Config() {
 		NamespaceId:         nacosClientConfig.Namespace,
 		TimeoutMs:           5000,
 		NotLoadCacheAtStart: true,
-		LogDir:              "user_api/tmp/nacos/log",
-		CacheDir:            "user_api/tmp/nacos/cache",
+		LogDir:              "tmp/nacos/log",
+		CacheDir:            "tmp/nacos/cache",
 		LogLevel:            "debug",
 	}
 	serverConfigs := []constant.ServerConfig{
