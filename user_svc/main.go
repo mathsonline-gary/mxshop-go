@@ -54,7 +54,7 @@ func main() {
 		Address: *ip,
 		Port:    *port,
 		Check: &api.AgentServiceCheck{
-			GRPC:     fmt.Sprintf("%s:%d", *ip, *port),
+			GRPC: fmt.Sprintf("%s:%d", global.ServerConfig.ConsulConfig.UserSvc.Check.Host, *port),
 			Timeout:  "5s",
 			Interval: "10s",
 			//DeregisterCriticalServiceAfter: "30s",

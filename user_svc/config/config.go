@@ -20,6 +20,11 @@ type AppConfig struct {
 type ConsulConfig struct {
 	Host string `mapstructure:"host"`
 	Port int    `mapstructure:"port"`
+	UserSvc struct {
+		Check struct {
+			Host string `mapstructure:"host"`
+		} `mapstructure:"check"`
+	} `mapstructure:"user_svc"`
 }
 
 type ServerConfig struct {
