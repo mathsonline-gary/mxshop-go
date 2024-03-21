@@ -1,25 +1,43 @@
 package main
 
 import (
+	"flag"
 	"fmt"
+
+	"mxshop-go/user_api/global"
+	"mxshop-go/user_api/initialize"
 
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	r := gin.Default()
+var (
+	ip   = flag.String("ip", "localhost", "user API IP")
+	port = flag.Int("port", 8081, "user API port")
+)
 
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "user_api",
-		})
-	})
+func main() {
+	flag.Parse()
+
+	// Init Config
+	initialize.Config()
+
+	// Init Logger
+	initialize.Logger()
+
+	// Init router
+	if global.Config.AppConfig.Env == "production" || !global.Config.AppConfig.Debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
+	r := gin.Default()
+	initialize.Router(r)
+
+	// Init user grpc service
+	initialize.InitUserSvcClient()
 
 	// Start app
-	port := 8081
-	err := r.Run(fmt.Sprintf(":%d", port))
-	if err != nil {
-		fmt.Printf("Failed to start server at port: %d\r\n", port)
+	fmt.Printf("starting server at %s:%d", *ip, *port)
+	if err := r.Run(fmt.Sprintf("%s:%d", *ip, *port)); err != nil {
+		fmt.Printf("failed to start server at %s:%d", *ip, *port)
 	}
 
 }
