@@ -1,6 +1,8 @@
 package model
 
 import (
+	"database/sql/driver"
+	"encoding/json"
 	"time"
 
 	"gorm.io/gorm"
@@ -12,4 +14,14 @@ type BaseModel struct {
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
 	IsDeleted bool
+}
+
+type StringList []string
+
+func (sl *StringList) Value() (driver.Value, error) {
+	return json.Marshal(sl)
+}
+
+func (sl *StringList) Scan(value interface{}) error {
+	return json.Unmarshal(value.([]byte), sl)
 }

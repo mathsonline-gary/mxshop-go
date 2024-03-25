@@ -11,7 +11,7 @@ type Category struct {
 
 type Brand struct {
 	BaseModel
-	Name string `gorm:"type:varchar(20);not null"`
+	Name string `gorm:"type:varchar(255);not null"`
 	Logo string `gorm:"type:varchar(255);not null;default:''"`
 }
 
@@ -56,4 +56,8 @@ type Product struct {
 
 	MarketPrice float32 `gorm:"not null"`
 	ShopPrice   float32 `gorm:"not null"`
+
+	Images      StringList `gorm:"type:json;not null"`
+	DescImages  StringList `gorm:"type:json;not null"`
+	FrontImages string     `gorm:"type:varchar(255);not null"`
 }
