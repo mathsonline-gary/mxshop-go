@@ -36,9 +36,9 @@ type AppConfig struct {
 }
 
 type ConsulConfig struct {
-	Host    string `mapstructure:"host" json:"host"`
-	Port    int    `mapstructure:"port" json:"port"`
-	UserSvc struct {
+	Host       string `mapstructure:"host" json:"host"`
+	Port       int    `mapstructure:"port" json:"port"`
+	ProductSvc struct {
 		Check struct {
 			Host string `mapstructure:"host" json:"host"`
 		} `mapstructure:"check" json:"check"`
