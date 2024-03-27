@@ -52,7 +52,7 @@ func main() {
 	}()
 
 	// Receive quit signal
-	quit := make(chan os.Signal)
+	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	if err := client.Agent().ServiceDeregister(serviceID); err != nil {

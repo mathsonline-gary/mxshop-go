@@ -70,5 +70,4 @@ func Index(ctx *gin.Context) {
 			"total": rsp.Total,
 		},
 	})
-	return
 }

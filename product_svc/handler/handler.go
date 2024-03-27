@@ -7,3 +7,5 @@ import (
 type ProductServiceServer struct {
 	proto.UnimplementedProductServiceServer
 }
+
+var _ proto.ProductServiceServer = ProductServiceServer{}
