@@ -15,6 +15,8 @@ func NewUserRepository() *userRepository {
 	return &userRepository{}
 }
 
+var _ urv1.UserRepository = (*userRepository)(nil)
+
 func (ur *userRepository) Index(ctx context.Context, opts urv1.ListMeta) (*urv1.UserDOList, error) {
 	return nil, nil
 }

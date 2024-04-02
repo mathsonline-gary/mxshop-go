@@ -1,4 +1,4 @@
-package registery
+package service_manager
 
 import "net/url"
 

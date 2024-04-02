@@ -11,7 +11,7 @@ type userController struct {
 	us usvc.UserService
 }
 
-var _ upb.UserServiceServer = &userController{}
+var _ upb.UserServiceServer = (*userController)(nil)
 
 func (uc *userController) GetUserList(ctx context.Context, req *upb.GetUserListRequest) (*upb.UserListResponse, error) {
 	opts := usvc.ListMeta{

@@ -13,8 +13,6 @@ type userService struct {
 	userRepository udv1.UserRepository
 }
 
-var _ UserService = &userService{}
-
 type ListMeta struct {
 	Page     int `json:"page,omitempty"`
 	PageSize int `json:"page_size,omitempty" form:"page_size"`
@@ -34,6 +32,8 @@ func NewUserService(ur udv1.UserRepository) *userService {
 		userRepository: ur,
 	}
 }
+
+var _ UserService = (*userService)(nil)
 
 func (us *userService) Index(ctx context.Context, opts ListMeta) (*UserDTOList, error) {
 	ul, err := us.userRepository.Index(ctx, udv1.ListMeta{
