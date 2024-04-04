@@ -1,10 +1,10 @@
-package service_manager
+package mesh
 
 import (
 	"context"
 )
 
-type ServiceRegistry interface {
+type Registry interface {
 	Register(context.Context, *ServiceInstance) error
 	Deregister(context.Context, *ServiceInstance) error
 }

@@ -1,4 +1,4 @@
-package service_manager
+package mesh
 
 import "net/url"
 
