@@ -100,8 +100,8 @@ message GetSubCategoriesResponse {
 }
 
 message GetCategoryBrandListRequest  {
-  int32 pages = 1;
-  int32 pagePerNums = 2;
+  int32 page = 1;
+  int32 pageSize = 2;
 }
 
 message CreateCategoryBrandRequest{
@@ -165,8 +165,8 @@ message BannerInfo {
 }
 
 message GetBrandsRequest {
-  int32 pages = 1;
-  int32 pagePerNums = 2;
+  int32 page = 1;
+  int32 pageSize = 2;
 }
 
 message GetBrandsResponse {
@@ -175,9 +175,8 @@ message GetBrandsResponse {
 }
 
 message CreateBrandRequest {
-  int32 id = 1;
-  string name = 2;
-  string logo = 3;
+  string name = 1;
+  string logo = 2;
 }
 
 message CreateBrandResponse {
@@ -284,8 +283,8 @@ message FilterProductsRequest  {
   bool  isNew = 4;
   bool  isTab = 5;
   int32 topCategory = 6;
-  int32 pages = 7;
-  int32 pagePerNums = 8;
+  int32 page = 7;
+  int32 pageSize = 8;
   string keyWords = 9;
   int32 brand = 10;
 }

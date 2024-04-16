@@ -13,7 +13,6 @@ type BaseModel struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 	DeletedAt gorm.DeletedAt
-	IsDeleted bool
 }
 
 type StringList []string

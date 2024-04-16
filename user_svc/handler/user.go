@@ -13,7 +13,6 @@ import (
 	userproto "mxshop-go/user_svc/proto"
 
 	"github.com/anaskhan96/go-password-encoder"
-	"github.com/golang/protobuf/ptypes/empty"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -172,7 +171,7 @@ func (u *UserServiceServer) UpdateUser(_ context.Context, request *userproto.Upd
 	if r := DB.Save(user); r.Error != nil {
 		return nil, status.Errorf(codes.Internal, r.Error.Error())
 	}
-	return &empty.Empty{}, nil
+	return &emptypb.Empty{}, nil
 }
 
 func (u *UserServiceServer) CheckPassword(_ context.Context, request *userproto.CheckPasswordRequest) (*userproto.CheckPasswordResponse, error) {
