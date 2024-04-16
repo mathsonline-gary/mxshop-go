@@ -70,26 +70,6 @@ func (p ProductServiceServer) UpdateCategory(ctx context.Context, request *proto
 	panic("implement me")
 }
 
-func (p ProductServiceServer) GetBanners(ctx context.Context, empty *emptypb.Empty) (*proto.GetBannersResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) CreateBanner(ctx context.Context, request *proto.CreateBannerRequest) (*proto.CreateBannerResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) DeleteBanner(ctx context.Context, request *proto.UpdateBannerRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) UpdateBanner(ctx context.Context, request *proto.DeleteBannerRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (p ProductServiceServer) GetCategoryBrandList(ctx context.Context, request *proto.GetCategoryBrandListRequest) (*proto.GetCategoryBrandListResponse, error) {
 	//TODO implement me
 	panic("implement me")

@@ -140,7 +140,7 @@ message CreateBannerRequest {
 }
 
 message CreateBannerResponse {
-  BrandInfo data = 1;
+  BannerInfo data = 1;
 }
 
 message UpdateBannerRequest {
