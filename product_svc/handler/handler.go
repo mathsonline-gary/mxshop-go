@@ -45,31 +45,6 @@ func (p ProductServiceServer) GetProduct(ctx context.Context, request *proto.Get
 	panic("implement me")
 }
 
-func (p ProductServiceServer) GetCategoryBrandList(ctx context.Context, request *proto.GetCategoryBrandListRequest) (*proto.GetCategoryBrandListResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) GetBrandsByCategory(ctx context.Context, request *proto.GetBrandsByCategoryRequest) (*proto.GetBrandsByCategoryResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) CreateCategoryBrand(ctx context.Context, request *proto.CreateCategoryBrandRequest) (*proto.CreateCategoryBrandResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) DeleteCategoryBrand(ctx context.Context, request *proto.DeleteCategoryBrandRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) UpdateCategoryBrand(ctx context.Context, request *proto.UpdateCategoryBrandRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		if page <= 0 {

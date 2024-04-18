@@ -2,12 +2,13 @@ package model
 
 type Category struct {
 	BaseModel
-	Name                 string `gorm:"type:varchar(20);not null"`
-	Level                int32  `gorm:"type:int;not null;default:1"`
-	VisibleInTab         bool   `gorm:"not null;default:false"`
-	UpperLevelCategoryID *int32
-	UpperLevelCategory   *Category
-	SubCategories        []*Category `gorm:"foreignKey:UpperLevelCategoryID;references:ID"`
+	Name                 string      `gorm:"type:varchar(20);not null"`
+	Level                int32       `gorm:"type:int;not null;default:1"`
+	VisibleInTab         bool        `gorm:"not null;default:false"`
+	UpperLevelCategoryID *int32      `gorm:"type:int;default:null"`
+	UpperLevelCategory   *Category   `gorm:"foreignKey:UpperLevelCategoryID;references:ID"` // "belongs to" relationship with the `Category` model,
+	SubCategories        []*Category `gorm:"foreignKey:UpperLevelCategoryID;references:ID"` // "has many" relationship with the `Category` model,
+
 }
 
 type Brand struct {
@@ -18,10 +19,11 @@ type Brand struct {
 
 type CategoryBrand struct {
 	BaseModel
-	CategoryID int32 `gorm:"type:int;index:idx_category_brand,unique"`
-	Category   *Category
-	BrandID    int32 `gorm:"type:int;index:idx_category_brand,unique"`
-	Brand      *Brand
+	CategoryID int32     `gorm:"type:int;index:idx_category_brand,unique"`
+	Category   *Category // "belongs to" relationship with the `Category` model,
+	BrandID    int32     `gorm:"type:int;index:idx_category_brand,unique"`
+	Brand      *Brand    // "belongs to" relationship with the `Brand` model,
+
 }
 
 func (CategoryBrand) TableName() string {
@@ -37,10 +39,10 @@ type Banner struct {
 
 type Product struct {
 	BaseModel
-	CategoryID int32 `gorm:"type:int;not null"`
-	Category   *Category
-	BrandID    int32 `gorm:"type:int;not null"`
-	Brand      *Brand
+	CategoryID int32     `gorm:"type:int;not null"`
+	Category   *Category // "belongs to" relationship with the `Category` model,
+	BrandID    int32     `gorm:"type:int;not null"`
+	Brand      *Brand    // "belongs to" relationship with the `Brand` model,
 
 	OnSale       bool `gorm:"default:false;not null"`
 	FreeShipping bool `gorm:"default:false;not null"`
