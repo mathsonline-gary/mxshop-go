@@ -6,24 +6,7 @@ import (
 	"testing"
 
 	"mxshop-go/product_svc/proto"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 )
-
-var (
-	conn          *grpc.ClientConn
-	productClient proto.ProductServiceClient
-)
-
-func init() {
-	var err error
-	conn, err = grpc.Dial("localhost:52603", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	productClient = proto.NewProductServiceClient(conn)
-}
 
 func TestGetBrands(t *testing.T) {
 	rsp, err := productClient.GetBrands(context.Background(), &proto.GetBrandsRequest{

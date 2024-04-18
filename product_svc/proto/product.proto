@@ -43,15 +43,13 @@ service ProductService {
 
 message GetSubCategoriesRequest {
   int32 id = 1;
-  int32 level = 2;
 }
 
 message CreateCategoryRequest {
   int32 id = 1;
   string name = 2;
   int32 parentCategory = 3;
-  int32 level = 4;
-  bool isTab = 5;
+  bool isTab = 4;
 }
 
 message CreateCategoryResponse {
@@ -62,8 +60,7 @@ message UpdateCategoryRequest {
   int32 id = 1;
   string name = 2;
   int32 parentCategory = 3;
-  int32 level = 4;
-  bool isTab = 5;
+  bool isTab = 4;
 }
 
 message DeleteCategoryRequest {

@@ -45,31 +45,6 @@ func (p ProductServiceServer) GetProduct(ctx context.Context, request *proto.Get
 	panic("implement me")
 }
 
-func (p ProductServiceServer) GetAllCategories(ctx context.Context, empty *emptypb.Empty) (*proto.GetAllCategoriesResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) GetSubCategories(ctx context.Context, request *proto.GetSubCategoriesRequest) (*proto.GetSubCategoriesResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) CreateCategory(ctx context.Context, request *proto.CreateCategoryRequest) (*proto.CreateCategoryResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) DeleteCategory(ctx context.Context, request *proto.DeleteCategoryRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) UpdateCategory(ctx context.Context, request *proto.UpdateCategoryRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
 func (p ProductServiceServer) GetCategoryBrandList(ctx context.Context, request *proto.GetCategoryBrandListRequest) (*proto.GetCategoryBrandListResponse, error) {
 	//TODO implement me
 	panic("implement me")

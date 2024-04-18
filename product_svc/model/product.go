@@ -5,8 +5,9 @@ type Category struct {
 	Name                 string `gorm:"type:varchar(20);not null"`
 	Level                int32  `gorm:"type:int;not null;default:1"`
 	VisibleInTab         bool   `gorm:"not null;default:false"`
-	UpperLevelCategoryID int32
+	UpperLevelCategoryID *int32
 	UpperLevelCategory   *Category
+	SubCategories        []*Category `gorm:"foreignKey:UpperLevelCategoryID;references:ID"`
 }
 
 type Brand struct {
