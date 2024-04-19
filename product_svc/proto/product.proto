@@ -209,7 +209,7 @@ message GetCategoryBrandListResponse {
 }
 
 message BatchGetProductsRequest {
-  repeated int32 id = 1;
+  repeated int32 ids = 1;
 }
 
 message DeleteProductRequest {
@@ -230,23 +230,22 @@ message GetProductResponse {
 }
 
 message CreateProductRequest {
-  int32 id = 1;
-  string name = 2;
-  string goodsSn = 3;
-  int32 stocks = 7; //库存，
-  float marketPrice = 8;
-  float shopPrice = 9;
-  string goodsBrief = 10;
-  string goodsDesc = 11;
-  bool shipFree = 12;
-  repeated string images = 13;
-  repeated string descImages = 14;
-  string goodsFrontImage = 15;
-  bool isNew = 16;
-  bool isHot = 17;
-  bool onSale = 18;
-  int32 categoryId = 19;
-  int32 brandId = 20;
+  string name = 1;
+  string serialNumber = 2;
+  int32 stocks = 3; //库存，
+  float marketPrice = 4;
+  float shopPrice = 5;
+  string brief = 6;
+  string description = 7;
+  bool freeShipping = 8;
+  repeated string images = 9;
+  repeated string descImages = 10;
+  string frontImage = 11;
+  bool isNew = 12;
+  bool isHot = 13;
+  bool onSale = 14;
+  int32 categoryId = 15;
+  int32 brandId = 16;
 }
 
 message CreateProductResponse {
@@ -274,40 +273,39 @@ message UpdateProductRequest {
 }
 
 message FilterProductsRequest  {
-  int32 priceMin = 1;
-  int32 priceMax = 2;
-  bool  isHot = 3;
-  bool  isNew = 4;
-  bool  isTab = 5;
-  int32 topCategory = 6;
+  optional int32 priceMin = 1;
+  optional int32 priceMax = 2;
+  optional bool  isHot = 3;
+  optional bool  isNew = 4;
+  optional bool  isTab = 5;
+  optional int32 topCategory = 6;
   int32 page = 7;
   int32 pageSize = 8;
-  string keyWords = 9;
-  int32 brand = 10;
+  optional string keyWords = 9;
+  optional int32 brand = 10;
 }
 
 message ProductInfo {
   int32 id = 1;
   int32 categoryId = 2;
   string name = 3;
-  string goodsSn = 4;
-  int32 clickNum = 5;
-  int32 soldNum = 6;
-  int32 favNum = 7;
+  string serialNumber = 4;
+  int32 clickCount = 5;
+  int32 soldCount = 6;
+  int32 likeCount = 7;
   float marketPrice = 9;
   float shopPrice = 10;
-  string goodsBrief = 11;
-  string goodsDesc = 12;
-  bool shipFree = 13;
+  string brief = 11;
+  string description = 12;
+  bool freeShipping = 13;
   repeated string images = 14;
   repeated string descImages = 15;
-  string goodsFrontImage = 16;
+  string frontImage = 16;
   bool isNew = 17;
   bool isHot = 18;
   bool onSale = 19;
-  int64 addTime = 20;
-  CategoryBriefInfo category = 21;
-  BrandInfo brand = 22;
+  CategoryBriefInfo category = 20;
+  BrandInfo brand = 21;
 }
 
 message FilterProductsResponse {

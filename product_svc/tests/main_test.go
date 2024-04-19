@@ -26,7 +26,7 @@ func TestMain(m *testing.M) {
 func setup() {
 	log.Println("start testing...")
 	var err error
-	conn, err = grpc.Dial("127.0.0.1:51793", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial("127.0.0.1:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

@@ -1,11 +1,8 @@
 package handler
 
 import (
-	"context"
-
 	"mxshop-go/product_svc/proto"
 
-	emptypb "google.golang.org/protobuf/types/known/emptypb"
 	"gorm.io/gorm"
 )
 
@@ -14,36 +11,6 @@ type ProductServiceServer struct {
 }
 
 var _ proto.ProductServiceServer = ProductServiceServer{}
-
-func (p ProductServiceServer) FilterProducts(ctx context.Context, request *proto.FilterProductsRequest) (*proto.FilterProductsResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) BatchGetProducts(ctx context.Context, request *proto.BatchGetProductsRequest) (*proto.BatchGetProductsResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.CreateProductRequest) (*proto.CreateProductResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) DeleteProduct(ctx context.Context, request *proto.DeleteProductRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) UpdateProduct(ctx context.Context, request *proto.UpdateProductRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
-}
-
-func (p ProductServiceServer) GetProduct(ctx context.Context, request *proto.GetProductRequest) (*proto.GetProductResponse, error) {
-	//TODO implement me
-	panic("implement me")
-}
 
 func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {

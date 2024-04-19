@@ -52,6 +52,7 @@ type Product struct {
 	Name         string `gorm:"type:varchar(255);not null"`
 	SerialNumber string `gorm:"type:varchar(50);not null"`
 	Brief        string `gorm:"type:varchar(255);not null"`
+	Description  string `gorm:"type:varchar(2000);not null"`
 
 	ClickCount int32 `gorm:"type:int;not null;default:0"`
 	LikeCount  int32 `gorm:"type:int;not null;default:0"`
@@ -60,7 +61,7 @@ type Product struct {
 	MarketPrice float32 `gorm:"not null"`
 	ShopPrice   float32 `gorm:"not null"`
 
-	Images      StringList `gorm:"type:json;not null"`
-	DescImages  StringList `gorm:"type:json;not null"`
-	FrontImages string     `gorm:"type:varchar(255);not null"`
+	Images     StringList `gorm:"type:json;not null"`
+	DescImages StringList `gorm:"type:json;not null"`
+	FrontImage string     `gorm:"type:varchar(255);not null"`
 }
