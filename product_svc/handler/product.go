@@ -72,7 +72,7 @@ func (p ProductServiceServer) FilterProducts(ctx context.Context, request *proto
 	}
 	if request.TopCategory != nil && request.GetTopCategory() > 0 {
 		var category model.Category
-		result := global.DB.First(&category, request.GetTopCategory())
+		result := global.DB.Limit(1).Find(&category, request.GetTopCategory())
 		if result.Error != nil {
 			return nil, status.Errorf(codes.Internal, result.Error.Error())
 		}
@@ -150,7 +150,7 @@ func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}
 	if result.RowsAffected == 0 {
-		return nil, status.Errorf(codes.NotFound, "category not found")
+		return nil, status.Errorf(codes.InvalidArgument, "category not found")
 	}
 
 	// Validate "BrandID" field
@@ -164,7 +164,7 @@ func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}
 	if result.RowsAffected == 0 {
-		return nil, status.Errorf(codes.NotFound, "brand not found")
+		return nil, status.Errorf(codes.InvalidArgument, "brand not found")
 	}
 
 	// Validate "CategoryID" and "BrandID" relationship
@@ -174,7 +174,7 @@ func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}
 	if result.RowsAffected == 0 {
-		return nil, status.Errorf(codes.NotFound, "category brand not found")
+		return nil, status.Errorf(codes.InvalidArgument, "category brand relationship not found")
 	}
 
 	// Validate "SerialNumber" field
