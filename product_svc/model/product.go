@@ -2,12 +2,12 @@ package model
 
 type Category struct {
 	BaseModel
-	Name                 string      `gorm:"type:varchar(20);not null"`
-	Level                int32       `gorm:"type:int;not null;default:1"`
-	VisibleInTab         bool        `gorm:"not null;default:false"`
-	UpperLevelCategoryID *int32      `gorm:"type:int;default:null"`
-	UpperLevelCategory   *Category   `gorm:"foreignKey:UpperLevelCategoryID;references:ID"` // "belongs to" relationship with the `Category` model,
-	SubCategories        []*Category `gorm:"foreignKey:UpperLevelCategoryID;references:ID"` // "has many" relationship with the `Category` model,
+	Name                 string      `gorm:"type:varchar(20);not null" json:"name"`
+	Level                int32       `gorm:"type:int;not null;default:1" json:"level"`
+	VisibleInTab         bool        `gorm:"not null;default:false" json:"visible_in_tab"`
+	UpperLevelCategoryID *int32      `gorm:"type:int;default:null" json:"upper_level_category_id"`
+	UpperLevelCategory   *Category   `gorm:"foreignKey:UpperLevelCategoryID;references:ID" json:"upper_level_category"` // "belongs to" relationship with the `Category` model,
+	SubCategories        []*Category `gorm:"foreignKey:UpperLevelCategoryID;references:ID" json:"sub_categories"`       // "has many" relationship with the `Category` model,
 
 }
 

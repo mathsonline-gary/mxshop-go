@@ -7,51 +7,14 @@ import (
 	"strconv"
 	"strings"
 
+	"mxshop-go/product_api/controllers"
 	"mxshop-go/product_api/global"
 	"mxshop-go/product_api/requests"
 	"mxshop-go/product_svc/proto"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"google.golang.org/grpc/codes"
-	"google.golang.org/grpc/status"
 )
-
-func HandleGRPCError(err error, ctx *gin.Context) {
-	stat := http.StatusInternalServerError
-	msg := "Internal error"
-
-	if err != nil {
-		if e, ok := status.FromError(err); ok {
-			switch e.Code() {
-			case codes.NotFound:
-				stat = http.StatusNotFound
-				msg = e.Message()
-			case codes.InvalidArgument:
-				stat = http.StatusUnprocessableEntity
-				msg = "Invalid request"
-				if e.Message() != "" {
-					msg += ": " + e.Message()
-				}
-			case codes.Internal:
-			default:
-				stat = http.StatusInternalServerError
-				msg = "Internal error"
-			}
-		}
-
-		ctx.JSON(stat, gin.H{
-			"message": msg,
-		})
-	}
-}
-
-func HandleValidationError(err error, ctx *gin.Context) {
-	zap.S().Error("Validation error: ", err)
-	ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-		"message": err.Error(),
-	})
-}
 
 func Index(ctx *gin.Context) {
 	req := proto.FilterProductsRequest{
@@ -137,7 +100,7 @@ func Index(ctx *gin.Context) {
 	products, err := global.ProductSvcClient.FilterProducts(context.Background(), &req)
 	if err != nil {
 		zap.S().Errorf("grpc service FilterProducts failed: %v", err)
-		HandleGRPCError(err, ctx)
+		controllers.HandleGRPCError(ctx, err)
 		return
 	}
 	data := make([]interface{}, 0, len(products.Data))
@@ -159,7 +122,7 @@ func Store(ctx *gin.Context) {
 	var req requests.StoreProductRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		HandleValidationError(err, ctx)
+		controllers.HandleValidationError(err, ctx)
 		return
 	}
 
@@ -182,7 +145,7 @@ func Store(ctx *gin.Context) {
 		BrandId:      req.BrandID,
 	})
 	if err != nil {
-		HandleGRPCError(err, ctx)
+		controllers.HandleGRPCError(ctx, err)
 		return
 	}
 
@@ -205,7 +168,7 @@ func Show(ctx *gin.Context) {
 		Id: int32(idInt),
 	})
 	if err != nil {
-		HandleGRPCError(err, ctx)
+		controllers.HandleGRPCError(ctx, err)
 		return
 	}
 
@@ -249,7 +212,7 @@ func Update(ctx *gin.Context) {
 
 	var req requests.UpdateProductRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		HandleValidationError(err, ctx)
+		controllers.HandleValidationError(err, ctx)
 		return
 	}
 
@@ -274,7 +237,7 @@ func Update(ctx *gin.Context) {
 		CategoryId:      req.CategoryID,
 		BrandId:         req.BrandID,
 	}); err != nil {
-		HandleGRPCError(err, ctx)
+		controllers.HandleGRPCError(ctx, err)
 		return
 	}
 
@@ -297,7 +260,7 @@ func Destroy(ctx *gin.Context) {
 		Id: int32(idInt),
 	})
 	if err != nil {
-		HandleGRPCError(err, ctx)
+		controllers.HandleGRPCError(ctx, err)
 		return
 	}
 

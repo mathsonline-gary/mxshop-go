@@ -10,10 +10,10 @@ import (
 )
 
 type BaseModel struct {
-	ID        int32 `gorm:"primarykey;type:int"`
-	CreatedAt time.Time
-	UpdatedAt time.Time
-	DeletedAt gorm.DeletedAt
+	ID        int32          `gorm:"primarykey;type:int" json:"id"`
+	CreatedAt time.Time      `json:"created_at"`
+	UpdatedAt time.Time      `json:"updated_at"`
+	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
 type StringList []string

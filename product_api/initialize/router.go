@@ -10,7 +10,6 @@ import (
 
 func Router(r *gin.Engine) {
 	fmt.Println("routes initializing...")
-	router := routes.ProductRouter{Engine: r}
-	router.Routes()
+	routes.SetRoutes(r)
 	fmt.Println("routes initialized!")
 }

@@ -40,6 +40,8 @@ func (p ProductServiceServer) GetAllCategories(_ context.Context, _ *emptypb.Emp
 }
 
 func (p ProductServiceServer) GetSubCategories(_ context.Context, request *proto.GetSubCategoriesRequest) (*proto.GetSubCategoriesResponse, error) {
+	rsp := proto.GetSubCategoriesResponse{}
+
 	// get category
 	var category model.Category
 	result := global.DB.First(&category, request.Id)
@@ -49,12 +51,17 @@ func (p ProductServiceServer) GetSubCategories(_ context.Context, request *proto
 	if result.RowsAffected == 0 {
 		return nil, status.Errorf(codes.NotFound, "category not found")
 	}
-	rsp := &proto.GetSubCategoriesResponse{}
+
+	// set category info
+	var parentCategory int32 = 0
+	if category.UpperLevelCategoryID != nil {
+		parentCategory = *category.UpperLevelCategoryID
+	}
 	rsp.Info = &proto.CategoryInfo{
 		Id:             category.ID,
 		Name:           category.Name,
 		Level:          category.Level,
-		ParentCategory: *category.UpperLevelCategoryID,
+		ParentCategory: parentCategory,
 		IsTab:          category.VisibleInTab,
 	}
 
@@ -74,7 +81,7 @@ func (p ProductServiceServer) GetSubCategories(_ context.Context, request *proto
 		})
 	}
 
-	return rsp, nil
+	return &rsp, nil
 }
 
 func (p ProductServiceServer) CreateCategory(_ context.Context, request *proto.CreateCategoryRequest) (*proto.CreateCategoryResponse, error) {
