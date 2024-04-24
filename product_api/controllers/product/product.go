@@ -1,11 +1,14 @@
 package product
 
 import (
+	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 
 	"mxshop-go/product_api/global"
+	"mxshop-go/product_api/requests"
 	"mxshop-go/product_svc/proto"
 
 	"github.com/gin-gonic/gin"
@@ -23,10 +26,13 @@ func HandleGRPCError(err error, ctx *gin.Context) {
 			switch e.Code() {
 			case codes.NotFound:
 				stat = http.StatusNotFound
-				msg = err.Error()
+				msg = e.Message()
 			case codes.InvalidArgument:
 				stat = http.StatusUnprocessableEntity
 				msg = "Invalid request"
+				if e.Message() != "" {
+					msg += ": " + e.Message()
+				}
 			case codes.Internal:
 			default:
 				stat = http.StatusInternalServerError
@@ -38,6 +44,13 @@ func HandleGRPCError(err error, ctx *gin.Context) {
 			"message": msg,
 		})
 	}
+}
+
+func HandleValidationError(err error, ctx *gin.Context) {
+	zap.S().Error("Validation error: ", err)
+	ctx.JSON(http.StatusUnprocessableEntity, gin.H{
+		"message": err.Error(),
+	})
 }
 
 func Index(ctx *gin.Context) {
@@ -121,7 +134,7 @@ func Index(ctx *gin.Context) {
 	}
 
 	// Call gRPC service
-	products, err := global.ProductSvcClient.FilterProducts(ctx, &req)
+	products, err := global.ProductSvcClient.FilterProducts(context.Background(), &req)
 	if err != nil {
 		zap.S().Errorf("grpc service FilterProducts failed: %v", err)
 		HandleGRPCError(err, ctx)
@@ -140,4 +153,153 @@ func Index(ctx *gin.Context) {
 	}
 
 	ctx.JSON(http.StatusOK, rsp)
+}
+
+func Store(ctx *gin.Context) {
+	var req requests.StoreProductRequest
+
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		HandleValidationError(err, ctx)
+		return
+	}
+
+	rsp, err := global.ProductSvcClient.CreateProduct(context.Background(), &proto.CreateProductRequest{
+		Name:         req.Name,
+		SerialNumber: req.SerialNumber,
+		Stocks:       req.Stock,
+		MarketPrice:  req.MarketPrice,
+		ShopPrice:    req.ShopPrice,
+		Brief:        req.Brief,
+		Description:  req.Description,
+		FreeShipping: req.FreeShipping,
+		Images:       req.Images,
+		DescImages:   req.DescImages,
+		FrontImage:   req.FrontImage,
+		IsNew:        false,
+		IsHot:        false,
+		OnSale:       false,
+		CategoryId:   req.CategoryID,
+		BrandId:      req.BrandID,
+	})
+	if err != nil {
+		HandleGRPCError(err, ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusCreated, gin.H{
+		"id": rsp.Data.Id,
+	})
+}
+
+func Show(ctx *gin.Context) {
+	id := ctx.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "product not found",
+		})
+		return
+	}
+
+	rsp, err := global.ProductSvcClient.GetProduct(context.Background(), &proto.GetProductRequest{
+		Id: int32(idInt),
+	})
+	if err != nil {
+		HandleGRPCError(err, ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"id":            rsp.Data.Id,
+		"name":          rsp.Data.Name,
+		"brief":         rsp.Data.Brief,
+		"description":   rsp.Data.Description,
+		"market_price":  rsp.Data.MarketPrice,
+		"shop_price":    rsp.Data.ShopPrice,
+		"free_shipping": rsp.Data.FreeShipping,
+		"images":        rsp.Data.Images,
+		"desc_images":   rsp.Data.DescImages,
+		"front_image":   rsp.Data.FrontImage,
+		"category": map[string]interface{}{
+			"id":   rsp.Data.Category.Id,
+			"name": rsp.Data.Category.Name,
+		},
+		"brand": map[string]interface{}{
+			"id":   rsp.Data.Brand.Id,
+			"name": rsp.Data.Brand.Name,
+		},
+		"on_sale":     rsp.Data.OnSale,
+		"is_new":      rsp.Data.IsNew,
+		"is_hot":      rsp.Data.IsHot,
+		"click_count": rsp.Data.ClickCount,
+		"like_count":  rsp.Data.LikeCount,
+		"sold_count":  rsp.Data.SoldCount,
+	})
+}
+
+func Update(ctx *gin.Context) {
+	id := ctx.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "product not found",
+		})
+		return
+	}
+
+	var req requests.UpdateProductRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		HandleValidationError(err, ctx)
+		return
+	}
+
+	fmt.Println(idInt, req)
+
+	if _, err := global.ProductSvcClient.UpdateProduct(context.Background(), &proto.UpdateProductRequest{
+		Id:              int32(idInt),
+		Name:            req.Name,
+		GoodsSn:         req.SerialNumber,
+		Stocks:          req.Stock,
+		MarketPrice:     req.MarketPrice,
+		ShopPrice:       req.ShopPrice,
+		GoodsBrief:      req.Brief,
+		GoodsDesc:       req.Description,
+		ShipFree:        req.FreeShipping,
+		Images:          req.Images,
+		DescImages:      req.DescImages,
+		GoodsFrontImage: req.FrontImage,
+		IsNew:           req.IsNew,
+		IsHot:           req.IsHot,
+		OnSale:          req.OnSale,
+		CategoryId:      req.CategoryID,
+		BrandId:         req.BrandID,
+	}); err != nil {
+		HandleGRPCError(err, ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": "update product successfully",
+	})
+}
+
+func Destroy(ctx *gin.Context) {
+	id := ctx.Param("id")
+	idInt, err := strconv.Atoi(id)
+	if err != nil {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"message": "product not found",
+		})
+		return
+	}
+
+	_, err = global.ProductSvcClient.DeleteProduct(context.Background(), &proto.DeleteProductRequest{
+		Id: int32(idInt),
+	})
+	if err != nil {
+		HandleGRPCError(err, ctx)
+		return
+	}
+
+	ctx.JSON(http.StatusNoContent, nil)
 }

@@ -144,7 +144,7 @@ func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.
 		return nil, status.Errorf(codes.InvalidArgument, "category_id is required")
 	}
 	var category model.Category
-	result := global.DB.First(&category, request.CategoryId)
+	result := global.DB.Limit(1).Find(&category, request.CategoryId)
 	if result.Error != nil {
 		zap.S().Errorf("create product failed: %v", result.Error)
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
@@ -158,7 +158,7 @@ func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.
 		return nil, status.Errorf(codes.InvalidArgument, "brand_id is required")
 	}
 	var brand model.Brand
-	result = global.DB.First(&brand, request.BrandId)
+	result = global.DB.Limit(1).Find(&brand, request.BrandId)
 	if result.Error != nil {
 		zap.S().Errorf("create product failed: %v", result.Error)
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
@@ -168,7 +168,7 @@ func (p ProductServiceServer) CreateProduct(ctx context.Context, request *proto.
 	}
 
 	// Validate "CategoryID" and "BrandID" relationship
-	result = global.DB.Where("category_id = ? AND brand_id = ?", request.CategoryId, request.BrandId).First(&model.CategoryBrand{})
+	result = global.DB.Where("category_id = ? AND brand_id = ?", request.CategoryId, request.BrandId).Limit(1).Find(&model.CategoryBrand{})
 	if result.Error != nil {
 		zap.S().Errorf("create product failed: %v", result.Error)
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
@@ -270,7 +270,7 @@ func (p ProductServiceServer) GetProduct(ctx context.Context, request *proto.Get
 		return nil, status.Errorf(codes.InvalidArgument, "id is required")
 	}
 
-	result := global.DB.Preload("Brand").Preload("Category").First(&product, request.Id)
+	result := global.DB.Preload("Brand").Preload("Category").Limit(1).Find(&product, request.Id)
 	if result.Error != nil {
 		zap.S().Errorf("get product failed: %v", result.Error)
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
