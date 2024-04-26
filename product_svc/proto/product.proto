@@ -1,0 +1,319 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option go_package = ".;proto";
+
+service ProductService {
+  //商品接口
+  rpc FilterProducts(FilterProductsRequest) returns(FilterProductsResponse);
+  //现在用户提交订单有多个商品，你得批量查询商品的信息吧
+  rpc BatchGetProducts(BatchGetProductsRequest) returns(BatchGetProductsResponse); //批量获取商品信息
+  rpc CreateProduct(CreateProductRequest) returns (CreateProductResponse);
+  rpc DeleteProduct(DeleteProductRequest) returns (google.protobuf.Empty);
+  rpc UpdateProduct(UpdateProductRequest) returns (google.protobuf.Empty);
+  rpc GetProduct(GetProductRequest) returns(GetProductResponse);
+
+  //商品分类
+  rpc GetAllCategories(google.protobuf.Empty) returns(GetAllCategoriesResponse); //获取所有的分类
+  //获取子分类
+  rpc GetSubCategories(GetSubCategoriesRequest) returns(GetSubCategoriesResponse);
+  rpc CreateCategory(CreateCategoryRequest) returns(CreateCategoryResponse); //新建分类信息
+  rpc DeleteCategory(DeleteCategoryRequest) returns(google.protobuf.Empty); //删除分类
+  rpc UpdateCategory(UpdateCategoryRequest) returns(google.protobuf.Empty); //修改分类信息
+
+  //品牌和轮播图
+  rpc GetBrands(GetBrandsRequest) returns(GetBrandsResponse);
+  rpc CreateBrand(CreateBrandRequest) returns(CreateBrandResponse); //新建品牌信息
+  rpc DeleteBrand(DeleteBrandRequest) returns(google.protobuf.Empty); //删除品牌
+  rpc UpdateBrand(UpdateBrandRequest) returns(google.protobuf.Empty); //修改品牌信息
+
+  //轮播图
+  rpc GetBanners(google.protobuf.Empty) returns(GetBannersResponse); //获取轮播列表信息
+  rpc CreateBanner(CreateBannerRequest) returns(CreateBannerResponse); //添加banner图
+  rpc DeleteBanner(UpdateBannerRequest) returns(google.protobuf.Empty); //删除轮播图
+  rpc UpdateBanner(DeleteBannerRequest) returns(google.protobuf.Empty); //修改轮播图
+
+  //品牌分类
+  rpc GetCategoryBrandList(GetCategoryBrandListRequest) returns(GetCategoryBrandListResponse);
+  //通过category获取brands
+  rpc GetBrandsByCategory(GetBrandsByCategoryRequest) returns(GetBrandsByCategoryResponse);
+  rpc CreateCategoryBrand(CreateCategoryBrandRequest) returns(CreateCategoryBrandResponse);
+  rpc DeleteCategoryBrand(DeleteCategoryBrandRequest) returns(google.protobuf.Empty);
+  rpc UpdateCategoryBrand(UpdateCategoryBrandRequest) returns(google.protobuf.Empty);
+}
+
+message GetSubCategoriesRequest {
+  int32 id = 1;
+}
+
+message CreateCategoryRequest {
+  int32 id = 1;
+  string name = 2;
+  int32 parentCategory = 3;
+  bool isTab = 4;
+}
+
+message CreateCategoryResponse {
+  CategoryInfo data = 1;
+}
+
+message UpdateCategoryRequest {
+  int32 id = 1;
+  string name = 2;
+  int32 parentCategory = 3;
+  bool isTab = 4;
+}
+
+message DeleteCategoryRequest {
+  int32 id = 1;
+}
+
+message GetBrandsByCategoryRequest {
+  int32 id = 1;
+}
+
+message GetBrandsByCategoryResponse {
+  int32 total = 1;
+  repeated BrandInfo data = 2;
+}
+
+message CategoryInfo {
+  int32 id = 1;
+  string name = 2;
+  int32 parentCategory = 3;
+  int32 level = 4;
+  bool isTab = 5;
+}
+
+message GetAllCategoriesResponse {
+  int32 total = 1;
+  repeated CategoryInfo data = 2;
+  string jsonData = 3;
+}
+
+message GetSubCategoriesResponse {
+  int32 total = 1;
+  CategoryInfo info = 2;
+  repeated CategoryInfo subCategories = 3;
+}
+
+message GetCategoryBrandListRequest  {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message CreateCategoryBrandRequest{
+  int32 id = 1;
+  int32 categoryId = 2;
+  int32 brandId = 3;
+}
+
+message UpdateCategoryBrandRequest{
+  int32 id = 1;
+  int32 categoryId = 2;
+  int32 brandId = 3;
+}
+
+message DeleteCategoryBrandRequest{
+  int32 id = 1;
+  int32 categoryId = 2;
+  int32 brandId = 3;
+}
+
+message CreateCategoryBrandResponse {
+  CategoryBrandInfo data = 1;
+}
+
+message CategoryBrandInfo {
+  int32 id = 1;
+  BrandInfo brand = 2;
+  CategoryInfo category = 3;
+}
+
+message CreateBannerRequest {
+  int32 id = 1;
+  int32 index = 2;
+  string image = 3;
+  string url = 4;
+}
+
+message CreateBannerResponse {
+  BannerInfo data = 1;
+}
+
+message UpdateBannerRequest {
+  int32 id = 1;
+  int32 index = 2;
+  string image = 3;
+  string url = 4;
+}
+
+message DeleteBannerRequest {
+  int32 id = 1;
+  int32 index = 2;
+  string image = 3;
+  string url = 4;
+}
+
+message BannerInfo {
+  int32 id = 1;
+  int32 index = 2;
+  string image = 3;
+  string url = 4;
+}
+
+message GetBrandsRequest {
+  int32 page = 1;
+  int32 pageSize = 2;
+}
+
+message GetBrandsResponse {
+  int32 total = 1;
+  repeated BrandInfo data = 2;
+}
+
+message CreateBrandRequest {
+  string name = 1;
+  string logo = 2;
+}
+
+message CreateBrandResponse {
+  BrandInfo data = 1;
+}
+
+message UpdateBrandRequest {
+  int32 id = 1;
+  string name = 2;
+  string logo = 3;
+}
+
+message DeleteBrandRequest {
+  int32 id = 1;
+  string name = 2;
+  string logo = 3;
+}
+
+message BrandInfo {
+  int32 id = 1;
+  string name = 2;
+  string logo = 3;
+}
+
+message GetBannersResponse {
+  int32 total = 1;
+  repeated BannerInfo data = 2;
+}
+
+message GetCategoryBrandListResponse {
+  int32 total = 1;
+  repeated CategoryBrandInfo data = 2;
+}
+
+message BatchGetProductsRequest {
+  repeated int32 ids = 1;
+}
+
+message DeleteProductRequest {
+  int32 id = 1;
+}
+
+message CategoryBriefInfo {
+  int32 id = 1;
+  string name = 2;
+}
+
+message GetProductRequest {
+  int32 id = 1;
+}
+
+message GetProductResponse {
+  ProductInfo data = 1;
+}
+
+message CreateProductRequest {
+  string name = 1;
+  string serialNumber = 2;
+  int32 stocks = 3; //库存，
+  float marketPrice = 4;
+  float shopPrice = 5;
+  string brief = 6;
+  string description = 7;
+  bool freeShipping = 8;
+  repeated string images = 9;
+  repeated string descImages = 10;
+  string frontImage = 11;
+  bool isNew = 12;
+  bool isHot = 13;
+  bool onSale = 14;
+  int32 categoryId = 15;
+  int32 brandId = 16;
+}
+
+message CreateProductResponse {
+  ProductInfo data = 1;
+}
+
+message UpdateProductRequest {
+  int32 id = 1;
+  string name = 2;
+  string goodsSn = 3;
+  int32 stocks = 7; //库存，
+  float marketPrice = 8;
+  float shopPrice = 9;
+  string goodsBrief = 10;
+  string goodsDesc = 11;
+  bool shipFree = 12;
+  repeated string images = 13;
+  repeated string descImages = 14;
+  string goodsFrontImage = 15;
+  bool isNew = 16;
+  bool isHot = 17;
+  bool onSale = 18;
+  int32 categoryId = 19;
+  int32 brandId = 20;
+}
+
+message FilterProductsRequest  {
+  optional int32 priceMin = 1;
+  optional int32 priceMax = 2;
+  optional bool  isHot = 3;
+  optional bool  isNew = 4;
+  optional bool  isTab = 5;
+  optional int32 topCategory = 6;
+  int32 page = 7;
+  int32 pageSize = 8;
+  optional string keyWords = 9;
+  optional int32 brand = 10;
+}
+
+message ProductInfo {
+  int32 id = 1;
+  int32 categoryId = 2;
+  string name = 3;
+  string serialNumber = 4;
+  int32 clickCount = 5;
+  int32 soldCount = 6;
+  int32 likeCount = 7;
+  float marketPrice = 9;
+  float shopPrice = 10;
+  string brief = 11;
+  string description = 12;
+  bool freeShipping = 13;
+  repeated string images = 14;
+  repeated string descImages = 15;
+  string frontImage = 16;
+  bool isNew = 17;
+  bool isHot = 18;
+  bool onSale = 19;
+  CategoryBriefInfo category = 20;
+  BrandInfo brand = 21;
+}
+
+message FilterProductsResponse {
+  int32 total = 1;
+  repeated ProductInfo data = 2;
+}
+
+message BatchGetProductsResponse {
+  int32 total = 1;
+  repeated ProductInfo data = 2;
+}

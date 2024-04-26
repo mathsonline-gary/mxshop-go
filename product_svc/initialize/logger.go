@@ -3,12 +3,12 @@ package initialize
 import (
 	"fmt"
 
-	"mxshop-go/user_api/global"
+	"mxshop-go/product_svc/global"
 
 	"go.uber.org/zap"
 )
 
-func Logger() {
+func initLogger() {
 	fmt.Println("logger initializing...")
 
 	var logger *zap.Logger

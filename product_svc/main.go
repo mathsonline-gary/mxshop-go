@@ -9,10 +9,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"mxshop-go/user_svc/global"
-	"mxshop-go/user_svc/handler"
-	"mxshop-go/user_svc/initialize"
-	userproto "mxshop-go/user_svc/proto"
+	"mxshop-go/product_svc/global"
+	"mxshop-go/product_svc/handler"
+	"mxshop-go/product_svc/initialize"
+	productproto "mxshop-go/product_svc/proto"
 
 	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/go-uuid"
@@ -24,7 +24,6 @@ import (
 
 func main() {
 	initialize.Init()
-
 	var (
 		ip   = flag.String("ip", global.Config.AppConfig.Host, "The user service IP")
 		port = flag.Int("port", global.Config.AppConfig.Port, "The user service port")
@@ -36,7 +35,7 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	userproto.RegisterUserServiceServer(s, &handler.UserServiceServer{})
+	productproto.RegisterProductServiceServer(s, &handler.ProductServiceServer{})
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 
 	client, serviceID, err := registerConsulService(*ip, *port)
@@ -57,9 +56,9 @@ func main() {
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 	if err := client.Agent().ServiceDeregister(serviceID); err != nil {
-		zap.S().Info("deregister user service failed")
+		zap.S().Info("deregister product service failed")
 	}
-	zap.S().Info("deregister user service successfully")
+	zap.S().Info("deregister product service successfully")
 }
 
 func registerConsulService(addr string, port int) (client *consulAPI.Client, serviceID string, err error) {
@@ -73,11 +72,11 @@ func registerConsulService(addr string, port int) (client *consulAPI.Client, ser
 	registration := &consulAPI.AgentServiceRegistration{
 		Name:    global.Config.AppConfig.Name,
 		ID:      serviceID,
-		Tags:    []string{"mxshop", "user", "svc"},
+		Tags:    []string{"mxshop", "product", "svc"},
 		Address: addr,
 		Port:    port,
 		Check: &consulAPI.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", global.Config.ConsulConfig.UserSvc.Check.Host, port),
+			GRPC:                           fmt.Sprintf("%s:%d", global.Config.ConsulConfig.ProductSvc.Check.Host, port),
 			Timeout:                        "5s",
 			Interval:                       "10s",
 			DeregisterCriticalServiceAfter: "30s",
