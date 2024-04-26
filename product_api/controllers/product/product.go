@@ -122,7 +122,7 @@ func Store(ctx *gin.Context) {
 	var req requests.StoreProductRequest
 
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		controllers.HandleValidationError(err, ctx)
+		controllers.HandleValidationError(ctx, err)
 		return
 	}
 
@@ -212,7 +212,7 @@ func Update(ctx *gin.Context) {
 
 	var req requests.UpdateProductRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		controllers.HandleValidationError(err, ctx)
+		controllers.HandleValidationError(ctx, err)
 		return
 	}
 

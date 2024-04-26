@@ -95,12 +95,12 @@ func (p ProductServiceServer) CreateCategory(_ context.Context, request *proto.C
 	} else {
 		category.UpperLevelCategoryID = &request.ParentCategory
 		var upperLevelCategory model.Category
-		result := global.DB.First(&upperLevelCategory, request.ParentCategory)
+		result := global.DB.Limit(1).Find(&upperLevelCategory, request.ParentCategory)
 		if result.Error != nil {
 			return nil, status.Errorf(codes.Internal, result.Error.Error())
 		}
 		if result.RowsAffected == 0 {
-			return nil, status.Errorf(codes.NotFound, "upper level category not found")
+			return nil, status.Errorf(codes.InvalidArgument, "upper level category not found")
 		}
 		category.Level = upperLevelCategory.Level + 1
 	}
@@ -108,14 +108,16 @@ func (p ProductServiceServer) CreateCategory(_ context.Context, request *proto.C
 		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 
+	data := proto.CategoryInfo{}
+	data.Id = category.ID
+	data.Name = category.Name
+	data.Level = category.Level
+	data.IsTab = category.VisibleInTab
+	if category.UpperLevelCategoryID != nil {
+		data.ParentCategory = *category.UpperLevelCategoryID
+	}
 	return &proto.CreateCategoryResponse{
-		Data: &proto.CategoryInfo{
-			Id:             category.ID,
-			Name:           category.Name,
-			ParentCategory: *category.UpperLevelCategoryID,
-			Level:          category.Level,
-			IsTab:          category.VisibleInTab,
-		},
+		Data: &data,
 	}, nil
 }
 
@@ -135,7 +137,7 @@ func (p ProductServiceServer) UpdateCategory(_ context.Context, request *proto.U
 	var category model.Category
 
 	// check if category exists
-	result := global.DB.First(&category, request.Id)
+	result := global.DB.Limit(1).Find(&category, request.Id)
 	if result.Error != nil {
 		return nil, status.Errorf(codes.Internal, result.Error.Error())
 	}

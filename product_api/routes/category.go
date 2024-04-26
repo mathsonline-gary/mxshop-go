@@ -13,6 +13,15 @@ func setCategoryRoutes(rg *gin.RouterGroup) {
 	// Get the list of categories.
 	categories.GET("/", category.Index)
 
+	// Create a new category.
+	categories.POST("/", category.Create)
+
+	// Update a category.
+	categories.PUT("/:id", category.Update)
+
+	// Delete a category.
+	categories.DELETE("/:id", category.Delete)
+
 	// Get the list of subcategories of a category.
 	categories.GET("/:id/subcategories", subcategory.Index)
 }

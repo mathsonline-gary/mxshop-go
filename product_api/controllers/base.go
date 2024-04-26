@@ -38,7 +38,7 @@ func HandleGRPCError(ctx *gin.Context, err error) {
 	}
 }
 
-func HandleValidationError(err error, ctx *gin.Context) {
+func HandleValidationError(ctx *gin.Context, err error) {
 	zap.S().Error("Validation error: ", err)
 	ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 		"message": err.Error(),
