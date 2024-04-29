@@ -3,7 +3,7 @@ package handler
 import (
 	"context"
 
-	"mxshop-go/product_svc/global"
+	"mxshop-go/stock_svc/global"
 	"mxshop-go/stock_svc/model"
 	"mxshop-go/stock_svc/proto"
 
@@ -20,16 +20,16 @@ var _ proto.StockServiceServer = (*StockServiceServer)(nil)
 
 func (s StockServiceServer) UpsertStock(ctx context.Context, request *proto.UpsertStockRequest) (*emptypb.Empty, error) {
 	if request.ProductId <= 0 {
-		return &emptypb.Empty{}, status.Errorf(codes.InvalidArgument, "invalid product id")
+		return nil, status.Errorf(codes.InvalidArgument, "invalid product ID")
 	}
 	if request.Quantity < 0 {
-		return &emptypb.Empty{}, status.Errorf(codes.InvalidArgument, "invalid quantity")
+		return nil, status.Errorf(codes.InvalidArgument, "invalid quantity")
 	}
 
 	var stock model.Stock
 
-	if err := global.DB.Limit(1).Where("product_id = ?", request.ProductId).Find(&stock).Error; err != nil {
-		return &emptypb.Empty{}, status.Errorf(codes.Internal, err.Error())
+	if err := global.DB.Limit(1).Where(&model.Stock{ProductID: request.ProductId}).Find(&stock).Error; err != nil {
+		return nil, status.Errorf(codes.Internal, err.Error())
 	}
 	stock.ProductID = request.ProductId
 	stock.Quantity = request.Quantity
@@ -59,12 +59,87 @@ func (s StockServiceServer) GetStock(ctx context.Context, request *proto.GetStoc
 	}, nil
 }
 
-func (s StockServiceServer) Withhold(ctx context.Context, request *proto.WithholdRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+func (s StockServiceServer) WithholdStock(ctx context.Context, request *proto.WithholdStockRequest) (*emptypb.Empty, error) {
+	// validate request
+	for _, data := range request.Data {
+		if data.ProductId <= 0 {
+			return nil, status.Errorf(codes.InvalidArgument, "product not found")
+		}
+		if data.Quantity < 0 {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid quantity")
+		}
+	}
+
+	// withhold stock
+	tx := global.DB.Begin()
+
+	for _, data := range request.Data {
+		var stock model.Stock
+
+		// get stock
+		result := global.DB.Limit(1).Where(&model.Stock{ProductID: data.ProductId}).Find(&stock)
+		if result.Error != nil {
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, result.Error.Error())
+		}
+		if result.RowsAffected == 0 {
+			tx.Rollback()
+			return nil, status.Errorf(codes.InvalidArgument, "product not found")
+		}
+		// check stock quantity
+		if stock.Quantity < data.Quantity {
+			tx.Rollback()
+			return nil, status.Errorf(codes.ResourceExhausted, "insufficient stock")
+		}
+
+		// update stock
+		stock.ProductID = data.ProductId
+		stock.Quantity -= data.Quantity
+		tx.Save(&stock)
+	}
+
+	tx.Commit()
+	return &emptypb.Empty{}, nil
 }
 
-func (s StockServiceServer) Return(ctx context.Context, request *proto.ReturnRequest) (*emptypb.Empty, error) {
-	//TODO implement me
-	panic("implement me")
+// ReturnStock returns the withheld stocks. It may be called when:
+// 1. order is timeout
+// 2. order is cancelled
+// 3. order is failed to be created
+func (s StockServiceServer) ReturnStock(ctx context.Context, request *proto.ReturnStockRequest) (*emptypb.Empty, error) {
+	// validate request
+	for _, data := range request.Data {
+		if data.ProductId <= 0 {
+			return nil, status.Errorf(codes.InvalidArgument, "product not found")
+		}
+		if data.Quantity < 0 {
+			return nil, status.Errorf(codes.InvalidArgument, "invalid quantity")
+		}
+	}
+
+	// return stock
+	tx := global.DB.Begin()
+
+	for _, data := range request.Data {
+		var stock model.Stock
+
+		// get stock
+		result := global.DB.Limit(1).Where(&model.Stock{ProductID: data.ProductId}).Find(&stock)
+		if result.Error != nil {
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, result.Error.Error())
+		}
+		if result.RowsAffected == 0 {
+			tx.Rollback()
+			return nil, status.Errorf(codes.InvalidArgument, "product not found")
+		}
+
+		// update stock
+		stock.ProductID = data.ProductId
+		stock.Quantity += data.Quantity
+		tx.Save(&stock)
+	}
+
+	tx.Commit()
+	return &emptypb.Empty{}, nil
 }

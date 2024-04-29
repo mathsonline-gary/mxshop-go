@@ -5,8 +5,8 @@ option go_package = ".;proto";
 service StockService {
   rpc UpsertStock(UpsertStockRequest) returns (google.protobuf.Empty);
   rpc GetStock(GetStockRequest) returns (GetStockResponse);
-  rpc Withhold(WithholdRequest) returns (google.protobuf.Empty);
-  rpc Return(ReturnRequest) returns (google.protobuf.Empty);
+  rpc WithholdStock(WithholdStockRequest) returns (google.protobuf.Empty);
+  rpc ReturnStock(ReturnStockRequest) returns (google.protobuf.Empty);
 }
 
 message UpsertStockRequest {
@@ -29,11 +29,11 @@ message StockInfo {
   int32 quantity = 2;
 }
 
-message WithholdRequest {
+message WithholdStockRequest {
   repeated StockInfo data = 1;
 }
 
-message ReturnRequest {
+message ReturnStockRequest {
   repeated StockInfo data = 1;
 }
 

@@ -25,8 +25,8 @@ const _ = grpc.SupportPackageIsVersion7
 type StockServiceClient interface {
 	UpsertStock(ctx context.Context, in *UpsertStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetStock(ctx context.Context, in *GetStockRequest, opts ...grpc.CallOption) (*GetStockResponse, error)
-	Withhold(ctx context.Context, in *WithholdRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	Return(ctx context.Context, in *ReturnRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	WithholdStock(ctx context.Context, in *WithholdStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	ReturnStock(ctx context.Context, in *ReturnStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type stockServiceClient struct {
@@ -55,18 +55,18 @@ func (c *stockServiceClient) GetStock(ctx context.Context, in *GetStockRequest, 
 	return out, nil
 }
 
-func (c *stockServiceClient) Withhold(ctx context.Context, in *WithholdRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *stockServiceClient) WithholdStock(ctx context.Context, in *WithholdStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/StockService/Withhold", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/StockService/WithholdStock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *stockServiceClient) Return(ctx context.Context, in *ReturnRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *stockServiceClient) ReturnStock(ctx context.Context, in *ReturnStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/StockService/Return", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/StockService/ReturnStock", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -79,8 +79,8 @@ func (c *stockServiceClient) Return(ctx context.Context, in *ReturnRequest, opts
 type StockServiceServer interface {
 	UpsertStock(context.Context, *UpsertStockRequest) (*emptypb.Empty, error)
 	GetStock(context.Context, *GetStockRequest) (*GetStockResponse, error)
-	Withhold(context.Context, *WithholdRequest) (*emptypb.Empty, error)
-	Return(context.Context, *ReturnRequest) (*emptypb.Empty, error)
+	WithholdStock(context.Context, *WithholdStockRequest) (*emptypb.Empty, error)
+	ReturnStock(context.Context, *ReturnStockRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedStockServiceServer()
 }
 
@@ -94,11 +94,11 @@ func (UnimplementedStockServiceServer) UpsertStock(context.Context, *UpsertStock
 func (UnimplementedStockServiceServer) GetStock(context.Context, *GetStockRequest) (*GetStockResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStock not implemented")
 }
-func (UnimplementedStockServiceServer) Withhold(context.Context, *WithholdRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Withhold not implemented")
+func (UnimplementedStockServiceServer) WithholdStock(context.Context, *WithholdStockRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method WithholdStock not implemented")
 }
-func (UnimplementedStockServiceServer) Return(context.Context, *ReturnRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Return not implemented")
+func (UnimplementedStockServiceServer) ReturnStock(context.Context, *ReturnStockRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ReturnStock not implemented")
 }
 func (UnimplementedStockServiceServer) mustEmbedUnimplementedStockServiceServer() {}
 
@@ -149,38 +149,38 @@ func _StockService_GetStock_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StockService_Withhold_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WithholdRequest)
+func _StockService_WithholdStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(WithholdStockRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StockServiceServer).Withhold(ctx, in)
+		return srv.(StockServiceServer).WithholdStock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/StockService/Withhold",
+		FullMethod: "/StockService/WithholdStock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StockServiceServer).Withhold(ctx, req.(*WithholdRequest))
+		return srv.(StockServiceServer).WithholdStock(ctx, req.(*WithholdStockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _StockService_Return_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ReturnRequest)
+func _StockService_ReturnStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ReturnStockRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(StockServiceServer).Return(ctx, in)
+		return srv.(StockServiceServer).ReturnStock(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/StockService/Return",
+		FullMethod: "/StockService/ReturnStock",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(StockServiceServer).Return(ctx, req.(*ReturnRequest))
+		return srv.(StockServiceServer).ReturnStock(ctx, req.(*ReturnStockRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -201,12 +201,12 @@ var StockService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _StockService_GetStock_Handler,
 		},
 		{
-			MethodName: "Withhold",
-			Handler:    _StockService_Withhold_Handler,
+			MethodName: "WithholdStock",
+			Handler:    _StockService_WithholdStock_Handler,
 		},
 		{
-			MethodName: "Return",
-			Handler:    _StockService_Return_Handler,
+			MethodName: "ReturnStock",
+			Handler:    _StockService_ReturnStock_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
