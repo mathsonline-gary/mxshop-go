@@ -2,7 +2,7 @@ package model
 
 type Stock struct {
 	ID
-	ProductID int32 `gorm:"type:int" json:"product_id"`
+	ProductID int32 `gorm:"type:int index:idx_product_id" json:"product_id"`
 	Quantity  int32 `gorm:"type:int" json:"quantity"`
 	Version   int32 `gorm:"type:int" json:"version"`
 	Timestamps

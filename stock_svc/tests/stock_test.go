@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"sync"
 	"testing"
 
 	"mxshop-go/stock_svc/proto"
@@ -344,6 +345,29 @@ func TestWithholdStock(t *testing.T) {
 			}
 		}
 	}
+}
+
+func TestWithholdStockConcurrency(t *testing.T) {
+	l := 20
+	var wg sync.WaitGroup
+	wg.Add(l)
+	for i := 0; i < l; i++ {
+		go func() {
+			defer wg.Done()
+			_, err := stockClient.WithholdStock(context.Background(), &proto.WithholdStockRequest{
+				Data: []*proto.StockInfo{
+					{
+						ProductId: 840,
+						Quantity:  1,
+					},
+				},
+			})
+			if err != nil {
+				t.Errorf("error: %v", err)
+			}
+		}()
+	}
+	wg.Wait()
 }
 
 func TestReturnStock(t *testing.T) {
