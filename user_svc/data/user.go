@@ -9,7 +9,7 @@ import (
 var _ UserRepo = (*userRepo)(nil)
 
 type UserRepo interface {
-	ListUser(page uint32, pageSize uint32) (total int64, users []*model.User, err error)
+	ListUser(page int32, pageSize int32) (total int64, users []*model.User, err error)
 	GetUserByID(id int32) (*model.User, error)
 	GetUserByMobile(mobile string) (*model.User, error)
 	CreateUser(user *model.User) error
@@ -24,15 +24,14 @@ func NewUserRepo(db *gorm.DB) UserRepo {
 	return &userRepo{db: db}
 }
 
-func (u userRepo) ListUser(page uint32, pageSize uint32) (int64, []*model.User, error) {
+func (u userRepo) ListUser(page int32, pageSize int32) (int64, []*model.User, error) {
 	var total int64
-	users := make([]*model.User, 0, pageSize)
-
 	if err := u.db.Model(&model.User{}).Count(&total).Error; err != nil {
-		return 0, users, err
+		return 0, nil, err
 	}
 
-	if err := u.db.Scopes(Paginate(int(page), int(pageSize))).Find(&users).Error; err != nil {
+	users := make([]*model.User, 0, pageSize)
+	if err := u.db.Scopes(paginate(page, pageSize)).Find(&users).Error; err != nil {
 		return 0, users, err
 	}
 
@@ -59,20 +58,9 @@ func (u userRepo) UpdateUser(user *model.User) error {
 	panic("implement me")
 }
 
-func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
+func paginate(page, pageSize int32) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
-		if page <= 0 {
-			page = 1
-		}
-
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
 		offset := (page - 1) * pageSize
-		return db.Offset(offset).Limit(pageSize)
+		return db.Offset(int(offset)).Limit(int(pageSize))
 	}
 }

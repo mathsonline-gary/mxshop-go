@@ -30,24 +30,6 @@ var (
 	}
 )
 
-func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
-	return func(db *gorm.DB) *gorm.DB {
-		if page <= 0 {
-			page = 1
-		}
-
-		switch {
-		case pageSize > 100:
-			pageSize = 100
-		case pageSize <= 0:
-			pageSize = 10
-		}
-
-		offset := (page - 1) * pageSize
-		return db.Offset(offset).Limit(pageSize)
-	}
-}
-
 func UserModelToUserInfo(user *model.User) *userproto.UserInfo {
 	info := userproto.UserInfo{
 		Id:       uint64(user.ID),
@@ -65,6 +47,20 @@ func UserModelToUserInfo(user *model.User) *userproto.UserInfo {
 	return &info
 }
 
+func adjustPaginationParams(page, pageSize int32) (p, ps int32) {
+	if page == 0 {
+		page = 1
+	}
+	switch {
+	case pageSize == 0:
+		pageSize = 10
+	case pageSize > 100:
+		pageSize = 100
+	}
+
+	return page, pageSize
+}
+
 var _ userproto.UserServiceServer = (*UserServiceServer)(nil)
 
 type UserServiceServer struct {
@@ -80,12 +76,14 @@ func (u *UserServiceServer) GetUserList(_ context.Context, request *userproto.Ge
 	zap.S().Debug("getting user list")
 	var response userproto.UserListResponse
 
-	total, users, err := u.userRepo.ListUser(request.Page, request.PageSize)
+	p, ps := adjustPaginationParams(int32(request.Page), int32(request.PageSize))
+	total, users, err := u.userRepo.ListUser(p, ps)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "get user list")
 	}
 
 	response.Total = total
+	response.Data = make([]*userproto.UserInfo, 0, ps)
 
 	for _, user := range users {
 		userInfo := UserModelToUserInfo(user)
