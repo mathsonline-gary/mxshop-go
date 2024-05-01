@@ -8,6 +8,7 @@ import (
 	"strings"
 	"time"
 
+	"mxshop-go/user_svc/data"
 	. "mxshop-go/user_svc/global"
 	"mxshop-go/user_svc/model"
 	userproto "mxshop-go/user_svc/proto"
@@ -47,7 +48,7 @@ func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
 	}
 }
 
-func UserModelToUserInfo(user model.User) *userproto.UserInfo {
+func UserModelToUserInfo(user *model.User) *userproto.UserInfo {
 	info := userproto.UserInfo{
 		Id:       uint64(user.ID),
 		Nickname: user.Nickname,
@@ -64,26 +65,34 @@ func UserModelToUserInfo(user model.User) *userproto.UserInfo {
 	return &info
 }
 
+var _ userproto.UserServiceServer = (*UserServiceServer)(nil)
+
 type UserServiceServer struct {
 	userproto.UnimplementedUserServiceServer
+	userRepo data.UserRepo
+}
+
+func NewUserServiceServer(ur data.UserRepo) *UserServiceServer {
+	return &UserServiceServer{userRepo: ur}
 }
 
 func (u *UserServiceServer) GetUserList(_ context.Context, request *userproto.GetUserListRequest) (*userproto.UserListResponse, error) {
 	zap.S().Debug("getting user list")
-	response := &userproto.UserListResponse{}
+	var response userproto.UserListResponse
 
-	var total int64
-	DB.Model(&model.User{}).Count(&total)
+	total, users, err := u.userRepo.ListUser(request.Page, request.PageSize)
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "get user list")
+	}
+
 	response.Total = total
 
-	var users []model.User
-	DB.Scopes(Paginate(int(request.Page), int(request.PageSize))).Find(&users)
 	for _, user := range users {
 		userInfo := UserModelToUserInfo(user)
 		response.Data = append(response.Data, userInfo)
 	}
 
-	return response, nil
+	return &response, nil
 }
 
 func (u *UserServiceServer) GetUserById(_ context.Context, request *userproto.IdRequest) (*userproto.UserInfoResponse, error) {
@@ -98,7 +107,7 @@ func (u *UserServiceServer) GetUserById(_ context.Context, request *userproto.Id
 		return nil, err
 	}
 
-	userInfo := UserModelToUserInfo(user)
+	userInfo := UserModelToUserInfo(&user)
 	response.Data = userInfo
 
 	return response, nil
@@ -116,7 +125,7 @@ func (u *UserServiceServer) GetUserByMobile(_ context.Context, request *userprot
 		return nil, err
 	}
 
-	userInfo := UserModelToUserInfo(user)
+	userInfo := UserModelToUserInfo(&user)
 	response.Data = userInfo
 
 	return response, nil
@@ -149,7 +158,7 @@ func (u *UserServiceServer) CreateUser(_ context.Context, request *userproto.Cre
 		return nil, status.Errorf(codes.Internal, r.Error.Error())
 	}
 
-	response.Data = UserModelToUserInfo(user)
+	response.Data = UserModelToUserInfo(&user)
 
 	return response, nil
 }
