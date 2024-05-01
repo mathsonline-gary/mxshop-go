@@ -2,12 +2,16 @@ package handler
 
 import (
 	"context"
+	"fmt"
 	"slices"
 
 	"mxshop-go/stock_svc/global"
 	"mxshop-go/stock_svc/model"
 	"mxshop-go/stock_svc/proto"
 
+	"github.com/go-redsync/redsync/v4"
+	"github.com/go-redsync/redsync/v4/redis/goredis/v9"
+	goredislib "github.com/redis/go-redis/v9"
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -85,43 +89,86 @@ func (s StockServiceServer) WithholdStock(_ context.Context, request *proto.With
 	// withhold stock
 	tx := global.DB.Begin()
 
+	// User redis distributed lock
+	client := goredislib.NewClient(&goredislib.Options{
+		Addr: "127.0.0.1:6379",
+	})
+	pool := goredis.NewPool(client)
+	rs := redsync.New(pool)
+	mutexList := make([]*redsync.Mutex, 0)
+
 	for _, data := range request.Data {
-		var stock model.Stock
-		// Optimistic Locking: retry if failed to update stock caused by lock
-		// This approach is can can be effective in scenarios where conflicts are rare, i.e., it's uncommon for multiple transactions to try to update the same stock item at the same time.
-		for {
-			// get stock
-			result := global.DB.Limit(1).Where(&model.Stock{ProductID: data.ProductId}).Find(&stock)
-			if result.Error != nil {
-				tx.Rollback()
-				return nil, status.Errorf(codes.Internal, result.Error.Error())
-			}
-			if result.RowsAffected == 0 {
-				tx.Rollback()
-				return nil, status.Errorf(codes.InvalidArgument, "product not found")
-			}
-			// check stock quantity
-			if stock.Quantity < data.Quantity {
-				tx.Rollback()
-				return nil, status.Errorf(codes.ResourceExhausted, "insufficient stock")
-			}
+		// acquire lock
+		mutexName := fmt.Sprintf("product_id:%d", data.ProductId)
+		mutex := rs.NewMutex(mutexName)
+		mutexList = append(mutexList, mutex)
 
-			// update stock
-			stock.ProductID = data.ProductId
-			stock.Quantity -= data.Quantity
-
-			result = tx.Model(&model.Stock{}).Where("product_id = ? and version = ?", data.ProductId, stock.Version).Select("Quantity", "Version").Updates(model.Stock{Quantity: stock.Quantity, Version: stock.Version + 1})
-			if result.Error != nil {
-				tx.Rollback()
-				return nil, status.Errorf(codes.Internal, result.Error.Error())
-			}
-			if result.RowsAffected == 0 {
-				zap.S().Info("failed to update stock caused by lock, retrying...")
-				continue
-			}
-			break
+		if err := mutex.Lock(); err != nil {
+			tx.Rollback()
+			zap.S().Error(err.Error())
+			return nil, status.Errorf(codes.Internal, "failed to acquire lock")
 		}
 
+		var stock model.Stock
+
+		// get stock
+		result := tx.Limit(1).Where(&model.Stock{ProductID: data.ProductId}).Find(&stock)
+		if result.Error != nil {
+			tx.Rollback()
+			return nil, status.Errorf(codes.Internal, result.Error.Error())
+		}
+		if result.RowsAffected == 0 {
+			tx.Rollback()
+			return nil, status.Errorf(codes.InvalidArgument, "product not found")
+		}
+
+		// check stock quantity
+		if stock.Quantity < data.Quantity {
+			tx.Rollback()
+			return nil, status.Errorf(codes.ResourceExhausted, "insufficient stock")
+		}
+
+		// update stock
+		stock.ProductID = data.ProductId
+		stock.Quantity -= data.Quantity
+		tx.Save(&stock)
+
+		// Optimistic Locking: retry if failed to update stock caused by lock
+		// This approach is can can be effective in scenarios where conflicts are rare, i.e., it's uncommon for multiple transactions to try to update the same stock item at the same time.
+		/*
+			for {
+				// get stock
+				result := global.DB.Limit(1).Where(&model.Stock{ProductID: data.ProductId}).Find(&stock)
+				if result.Error != nil {
+					tx.Rollback()
+					return nil, status.Errorf(codes.Internal, result.Error.Error())
+				}
+				if result.RowsAffected == 0 {
+					tx.Rollback()
+					return nil, status.Errorf(codes.InvalidArgument, "product not found")
+				}
+				// check stock quantity
+				if stock.Quantity < data.Quantity {
+					tx.Rollback()
+					return nil, status.Errorf(codes.ResourceExhausted, "insufficient stock")
+				}
+
+				// update stock
+				stock.ProductID = data.ProductId
+				stock.Quantity -= data.Quantity
+
+				result = tx.Model(&model.Stock{}).Where("product_id = ? and version = ?", data.ProductId, stock.Version).Select("Quantity", "Version").Updates(model.Stock{Quantity: stock.Quantity, Version: stock.Version + 1})
+				if result.Error != nil {
+					tx.Rollback()
+					return nil, status.Errorf(codes.Internal, result.Error.Error())
+				}
+				if result.RowsAffected == 0 {
+					zap.S().Info("failed to update stock caused by lock, retrying...")
+					continue
+				}
+				break
+			}
+		*/
 		// Pessimistic Locking: lock the stock item before updating it
 		// This approach is effective in scenarios where conflicts are common, i.e., it's common for multiple transactions to try to update the same stock item at the same time.
 		// But it can potentially decrease throughput and increase risk of deadlocks.
@@ -150,6 +197,14 @@ func (s StockServiceServer) WithholdStock(_ context.Context, request *proto.With
 	}
 
 	tx.Commit()
+
+	// release lock
+	for _, mutex := range mutexList {
+		if ok, err := mutex.Unlock(); !ok || err != nil {
+			zap.S().Error("failed to release lock")
+			return nil, status.Errorf(codes.Internal, "failed to release lock")
+		}
+	}
 	return &emptypb.Empty{}, nil
 }
 

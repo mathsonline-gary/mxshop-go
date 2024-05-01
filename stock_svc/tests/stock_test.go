@@ -360,6 +360,10 @@ func TestWithholdStockConcurrency(t *testing.T) {
 						ProductId: 840,
 						Quantity:  1,
 					},
+					{
+						ProductId: 839,
+						Quantity:  1,
+					},
 				},
 			})
 			if err != nil {
