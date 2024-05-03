@@ -3,38 +3,32 @@ package handler
 import (
 	"context"
 	"errors"
+	"testing"
+
+	"mxshop-go/user_svc/data/mock"
+	"mxshop-go/user_svc/model"
+
+	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	"mxshop-go/user_svc/data/mock"
-	"mxshop-go/user_svc/model"
-	"mxshop-go/user_svc/proto"
-	"testing"
 
 	userproto "mxshop-go/user_svc/proto"
 )
 
 func TestUserServiceServer_GetUserList(t *testing.T) {
-	ctrl := gomock.NewController(t)
-	defer ctrl.Finish()
-	mockUserRepo := mock.NewMockUserRepo(ctrl)
-	server := NewUserServiceServer(mockUserRepo)
-
 	type args struct {
 		ctx     context.Context
 		request *userproto.GetUserListRequest
 	}
 
-	type expect struct {
-		rsp *userproto.UserListResponse
-		err error
-	}
+	type asserts func(*testing.T, *userproto.UserListResponse, error)
 
 	tests := []struct {
-		name   string
-		args   args
-		mock   func()
-		expect expect
+		name    string
+		args    args
+		expects func(*mock.MockUserRepo)
+		asserts asserts
 	}{
 		{
 			name: "Internal error",
@@ -45,13 +39,14 @@ func TestUserServiceServer_GetUserList(t *testing.T) {
 					PageSize: 10,
 				},
 			},
-			mock: func() {
+			expects: func(mockUserRepo *mock.MockUserRepo) {
 				var total int64 = 0
 				mockUserRepo.EXPECT().ListUser(gomock.Any(), gomock.Any()).Return(total, nil, errors.New("internal error"))
 			},
-			expect: expect{
-				rsp: nil,
-				err: status.Errorf(codes.Internal, "get user list"),
+			asserts: func(t *testing.T, response *userproto.UserListResponse, err error) {
+				assert.Nil(t, response)
+				assert.Error(t, err)
+				assert.ErrorIs(t, err, status.Errorf(codes.Internal, "get user list"))
 			},
 		},
 		{
@@ -63,17 +58,16 @@ func TestUserServiceServer_GetUserList(t *testing.T) {
 					PageSize: 10,
 				},
 			},
-			mock: func() {
+			expects: func(mockUserRepo *mock.MockUserRepo) {
 				var total int64 = 0
 				users := make([]*model.User, 0)
 				mockUserRepo.EXPECT().ListUser(gomock.Any(), gomock.Any()).Return(total, users, nil)
 			},
-			expect: expect{
-				rsp: &userproto.UserListResponse{
-					Total: 0,
-					Data:  []*proto.UserInfo{},
-				},
-				err: nil,
+			asserts: func(t *testing.T, response *userproto.UserListResponse, err error) {
+				assert.NotNil(t, response)
+				assert.Equal(t, int64(0), response.Total)
+				assert.Empty(t, response.Data)
+				assert.NoError(t, err)
 			},
 		},
 		{
@@ -85,7 +79,7 @@ func TestUserServiceServer_GetUserList(t *testing.T) {
 					PageSize: 10,
 				},
 			},
-			mock: func() {
+			expects: func(mockUserRepo *mock.MockUserRepo) {
 				var total int64 = 20
 				users := make([]*model.User, 0, 10)
 				for i := 0; i < 10; i++ {
@@ -93,29 +87,24 @@ func TestUserServiceServer_GetUserList(t *testing.T) {
 				}
 				mockUserRepo.EXPECT().ListUser(gomock.Any(), gomock.Any()).Return(total, users, nil)
 			},
-			expect: expect{
-				rsp: &userproto.UserListResponse{
-					Total: 20,
-					Data:  make([]*userproto.UserInfo, 10),
-				},
-				err: nil,
+			asserts: func(t *testing.T, response *userproto.UserListResponse, err error) {
+				assert.NotNil(t, response)
+				assert.Equal(t, int64(20), response.Total)
+				assert.Len(t, response.Data, 10)
+				assert.NoError(t, err)
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.mock()
+			ctrl := gomock.NewController(t)
+			defer ctrl.Finish()
+			mockUserRepo := mock.NewMockUserRepo(ctrl)
+			server := NewUserServiceServer(mockUserRepo)
+
+			tt.expects(mockUserRepo)
 			got, err := server.GetUserList(tt.args.ctx, tt.args.request)
-			if !errors.Is(err, tt.expect.err) {
-				t.Errorf("GetUserList() got = (%v, %v), expect (%v, %v)", got, err, tt.expect.rsp, tt.expect.err)
-				return
-			}
-			if err == nil {
-				if got.Total != tt.expect.rsp.Total || len(got.Data) != len(tt.expect.rsp.Data) {
-					t.Errorf("GetUserList() got = (%v, %v), expect (%v, %v)", got, err, tt.expect.rsp, tt.expect.err)
-					return
-				}
-			}
+			tt.asserts(t, got, err)
 		})
 	}
 }

@@ -11,6 +11,18 @@ linters:
     - goimports
     - govet
     - staticcheck
+    - testifylint
+
+linters-settings:
+  testifylint:
+    disable:
+      - blank-import
+      - float-compare
+      - go-require
+      - require-error
+      - useless-assert
+    enable:
+      - suite-thelper
 
 issues:
   exclude-use-default: false
