@@ -2,16 +2,17 @@ package app
 
 import (
 	"context"
-	"mxshop-go/gmicro/service_manager"
 	"os"
 	"os/signal"
 	"sync"
+
+	"mxshop-go/gmicro/mesh"
 )
 
 type App struct {
 	options  options
 	mu       sync.Mutex
-	instance *service_manager.ServiceInstance
+	instance *mesh.ServiceInstance
 }
 
 func New(opts ...Option) *App {
@@ -25,7 +26,7 @@ func New(opts ...Option) *App {
 	}
 }
 
-func (app *App) getInstance() *service_manager.ServiceInstance {
+func (app *App) getInstance() *mesh.ServiceInstance {
 	app.mu.Lock()
 	ins := app.instance
 	app.mu.Unlock()
@@ -33,7 +34,7 @@ func (app *App) getInstance() *service_manager.ServiceInstance {
 	return ins
 }
 
-func (app *App) setInstance(instance *service_manager.ServiceInstance) {
+func (app *App) setInstance(instance *mesh.ServiceInstance) {
 	app.mu.Lock()
 	app.instance = instance
 	app.mu.Unlock()
@@ -78,8 +79,8 @@ func (app *App) Stop() error {
 	return nil
 }
 
-func (app *App) buildServiceInstance() (*service_manager.ServiceInstance, error) {
-	return &service_manager.ServiceInstance{
+func (app *App) buildServiceInstance() (*mesh.ServiceInstance, error) {
+	return &mesh.ServiceInstance{
 		ID:        app.options.id,
 		Name:      app.options.name,
 		Endpoints: app.options.endpoints,

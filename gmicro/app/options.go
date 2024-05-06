@@ -1,11 +1,12 @@
 package app
 
 import (
-	"mxshop-go/gmicro/service_manager"
 	"net/url"
 	"os"
 	"syscall"
 	"time"
+
+	"mxshop-go/gmicro/mesh"
 
 	"github.com/google/uuid"
 )
@@ -19,7 +20,7 @@ type options struct {
 
 	exitSignals []os.Signal
 
-	registry          service_manager.ServiceRegistry
+	registry          mesh.Registry
 	registerTimeout   time.Duration
 	deregisterTimeout time.Duration
 }
