@@ -1,0 +1,39 @@
+syntax = "proto3";
+import "google/protobuf/empty.proto";
+option go_package = ".;proto";
+
+service OrderService {
+  rpc UpsertStock(UpsertStockRequest) returns (google.protobuf.Empty);
+  rpc GetStock(GetStockRequest) returns (GetStockResponse);
+  rpc WithholdStock(WithholdStockRequest) returns (google.protobuf.Empty);
+  rpc ReturnStock(ReturnStockRequest) returns (google.protobuf.Empty);
+}
+
+message UpsertStockRequest {
+  int32 productId = 1;
+  int32 quantity = 2;
+}
+
+message GetStockRequest {
+  int32 productId = 1;
+}
+
+message GetStockResponse {
+  int32 productId = 1;
+  int32 quantity = 2;
+  int32 version = 3;
+}
+
+message StockInfo {
+  int32 productId = 1;
+  int32 quantity = 2;
+}
+
+message WithholdStockRequest {
+  repeated StockInfo data = 1;
+}
+
+message ReturnStockRequest {
+  repeated StockInfo data = 1;
+}
+

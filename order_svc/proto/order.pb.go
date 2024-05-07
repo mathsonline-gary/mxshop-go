@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.28.1
 // 	protoc        v3.21.12
-// source: stock_svc/proto/order.proto
+// source: order.proto
 
 package proto
 
@@ -33,7 +33,7 @@ type UpsertStockRequest struct {
 func (x *UpsertStockRequest) Reset() {
 	*x = UpsertStockRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_stock_svc_proto_stock_proto_msgTypes[0]
+		mi := &file_order_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -46,7 +46,7 @@ func (x *UpsertStockRequest) String() string {
 func (*UpsertStockRequest) ProtoMessage() {}
 
 func (x *UpsertStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_stock_svc_proto_stock_proto_msgTypes[0]
+	mi := &file_order_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -59,7 +59,7 @@ func (x *UpsertStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpsertStockRequest.ProtoReflect.Descriptor instead.
 func (*UpsertStockRequest) Descriptor() ([]byte, []int) {
-	return file_stock_svc_proto_stock_proto_rawDescGZIP(), []int{0}
+	return file_order_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *UpsertStockRequest) GetProductId() int32 {
@@ -87,7 +87,7 @@ type GetStockRequest struct {
 func (x *GetStockRequest) Reset() {
 	*x = GetStockRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_stock_svc_proto_stock_proto_msgTypes[1]
+		mi := &file_order_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -100,7 +100,7 @@ func (x *GetStockRequest) String() string {
 func (*GetStockRequest) ProtoMessage() {}
 
 func (x *GetStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_stock_svc_proto_stock_proto_msgTypes[1]
+	mi := &file_order_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -113,7 +113,7 @@ func (x *GetStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStockRequest.ProtoReflect.Descriptor instead.
 func (*GetStockRequest) Descriptor() ([]byte, []int) {
-	return file_stock_svc_proto_stock_proto_rawDescGZIP(), []int{1}
+	return file_order_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *GetStockRequest) GetProductId() int32 {
@@ -136,7 +136,7 @@ type GetStockResponse struct {
 func (x *GetStockResponse) Reset() {
 	*x = GetStockResponse{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_stock_svc_proto_stock_proto_msgTypes[2]
+		mi := &file_order_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -149,7 +149,7 @@ func (x *GetStockResponse) String() string {
 func (*GetStockResponse) ProtoMessage() {}
 
 func (x *GetStockResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_stock_svc_proto_stock_proto_msgTypes[2]
+	mi := &file_order_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -162,7 +162,7 @@ func (x *GetStockResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetStockResponse.ProtoReflect.Descriptor instead.
 func (*GetStockResponse) Descriptor() ([]byte, []int) {
-	return file_stock_svc_proto_stock_proto_rawDescGZIP(), []int{2}
+	return file_order_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *GetStockResponse) GetProductId() int32 {
@@ -198,7 +198,7 @@ type StockInfo struct {
 func (x *StockInfo) Reset() {
 	*x = StockInfo{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_stock_svc_proto_stock_proto_msgTypes[3]
+		mi := &file_order_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -211,7 +211,7 @@ func (x *StockInfo) String() string {
 func (*StockInfo) ProtoMessage() {}
 
 func (x *StockInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_stock_svc_proto_stock_proto_msgTypes[3]
+	mi := &file_order_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -224,7 +224,7 @@ func (x *StockInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use StockInfo.ProtoReflect.Descriptor instead.
 func (*StockInfo) Descriptor() ([]byte, []int) {
-	return file_stock_svc_proto_stock_proto_rawDescGZIP(), []int{3}
+	return file_order_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *StockInfo) GetProductId() int32 {
@@ -252,7 +252,7 @@ type WithholdStockRequest struct {
 func (x *WithholdStockRequest) Reset() {
 	*x = WithholdStockRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_stock_svc_proto_stock_proto_msgTypes[4]
+		mi := &file_order_proto_msgTypes[4]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -265,7 +265,7 @@ func (x *WithholdStockRequest) String() string {
 func (*WithholdStockRequest) ProtoMessage() {}
 
 func (x *WithholdStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_stock_svc_proto_stock_proto_msgTypes[4]
+	mi := &file_order_proto_msgTypes[4]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -278,7 +278,7 @@ func (x *WithholdStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use WithholdStockRequest.ProtoReflect.Descriptor instead.
 func (*WithholdStockRequest) Descriptor() ([]byte, []int) {
-	return file_stock_svc_proto_stock_proto_rawDescGZIP(), []int{4}
+	return file_order_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *WithholdStockRequest) GetData() []*StockInfo {
@@ -299,7 +299,7 @@ type ReturnStockRequest struct {
 func (x *ReturnStockRequest) Reset() {
 	*x = ReturnStockRequest{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_stock_svc_proto_stock_proto_msgTypes[5]
+		mi := &file_order_proto_msgTypes[5]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -312,7 +312,7 @@ func (x *ReturnStockRequest) String() string {
 func (*ReturnStockRequest) ProtoMessage() {}
 
 func (x *ReturnStockRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_stock_svc_proto_stock_proto_msgTypes[5]
+	mi := &file_order_proto_msgTypes[5]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -325,7 +325,7 @@ func (x *ReturnStockRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ReturnStockRequest.ProtoReflect.Descriptor instead.
 func (*ReturnStockRequest) Descriptor() ([]byte, []int) {
-	return file_stock_svc_proto_stock_proto_rawDescGZIP(), []int{5}
+	return file_order_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ReturnStockRequest) GetData() []*StockInfo {
@@ -335,11 +335,10 @@ func (x *ReturnStockRequest) GetData() []*StockInfo {
 	return nil
 }
 
-var File_stock_svc_proto_stock_proto protoreflect.FileDescriptor
+var File_order_proto protoreflect.FileDescriptor
 
-var file_stock_svc_proto_stock_proto_rawDesc = []byte{
-	0x0a, 0x1b, 0x73, 0x74, 0x6f, 0x63, 0x6b, 0x5f, 0x73, 0x76, 0x63, 0x2f, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x2f, 0x73, 0x74, 0x6f, 0x63, 0x6b, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x67,
+var file_order_proto_rawDesc = []byte{
+	0x0a, 0x0b, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a, 0x1b, 0x67,
 	0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2f, 0x65,
 	0x6d, 0x70, 0x74, 0x79, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x22, 0x4e, 0x0a, 0x12, 0x55, 0x70,
 	0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
@@ -367,8 +366,8 @@ var file_stock_svc_proto_stock_proto_rawDesc = []byte{
 	0x74, 0x61, 0x22, 0x34, 0x0a, 0x12, 0x52, 0x65, 0x74, 0x75, 0x72, 0x6e, 0x53, 0x74, 0x6f, 0x63,
 	0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1e, 0x0a, 0x04, 0x64, 0x61, 0x74, 0x61,
 	0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x0a, 0x2e, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x49, 0x6e,
-	0x66, 0x6f, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x32, 0xf7, 0x01, 0x0a, 0x0c, 0x53, 0x74, 0x6f,
-	0x63, 0x6b, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x55, 0x70, 0x73,
+	0x66, 0x6f, 0x52, 0x04, 0x64, 0x61, 0x74, 0x61, 0x32, 0xf7, 0x01, 0x0a, 0x0c, 0x4f, 0x72, 0x64,
+	0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3a, 0x0a, 0x0b, 0x55, 0x70, 0x73,
 	0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x12, 0x13, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72,
 	0x74, 0x53, 0x74, 0x6f, 0x63, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x16, 0x2e,
 	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
@@ -388,19 +387,19 @@ var file_stock_svc_proto_stock_proto_rawDesc = []byte{
 }
 
 var (
-	file_stock_svc_proto_stock_proto_rawDescOnce sync.Once
-	file_stock_svc_proto_stock_proto_rawDescData = file_stock_svc_proto_stock_proto_rawDesc
+	file_order_proto_rawDescOnce sync.Once
+	file_order_proto_rawDescData = file_order_proto_rawDesc
 )
 
-func file_stock_svc_proto_stock_proto_rawDescGZIP() []byte {
-	file_stock_svc_proto_stock_proto_rawDescOnce.Do(func() {
-		file_stock_svc_proto_stock_proto_rawDescData = protoimpl.X.CompressGZIP(file_stock_svc_proto_stock_proto_rawDescData)
+func file_order_proto_rawDescGZIP() []byte {
+	file_order_proto_rawDescOnce.Do(func() {
+		file_order_proto_rawDescData = protoimpl.X.CompressGZIP(file_order_proto_rawDescData)
 	})
-	return file_stock_svc_proto_stock_proto_rawDescData
+	return file_order_proto_rawDescData
 }
 
-var file_stock_svc_proto_stock_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_stock_svc_proto_stock_proto_goTypes = []interface{}{
+var file_order_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_order_proto_goTypes = []interface{}{
 	(*UpsertStockRequest)(nil),   // 0: UpsertStockRequest
 	(*GetStockRequest)(nil),      // 1: GetStockRequest
 	(*GetStockResponse)(nil),     // 2: GetStockResponse
@@ -409,17 +408,17 @@ var file_stock_svc_proto_stock_proto_goTypes = []interface{}{
 	(*ReturnStockRequest)(nil),   // 5: ReturnStockRequest
 	(*emptypb.Empty)(nil),        // 6: google.protobuf.Empty
 }
-var file_stock_svc_proto_stock_proto_depIdxs = []int32{
+var file_order_proto_depIdxs = []int32{
 	3, // 0: WithholdStockRequest.data:type_name -> StockInfo
 	3, // 1: ReturnStockRequest.data:type_name -> StockInfo
-	0, // 2: StockService.UpsertStock:input_type -> UpsertStockRequest
-	1, // 3: StockService.GetStock:input_type -> GetStockRequest
-	4, // 4: StockService.WithholdStock:input_type -> WithholdStockRequest
-	5, // 5: StockService.ReturnStock:input_type -> ReturnStockRequest
-	6, // 6: StockService.UpsertStock:output_type -> google.protobuf.Empty
-	2, // 7: StockService.GetStock:output_type -> GetStockResponse
-	6, // 8: StockService.WithholdStock:output_type -> google.protobuf.Empty
-	6, // 9: StockService.ReturnStock:output_type -> google.protobuf.Empty
+	0, // 2: OrderService.UpsertStock:input_type -> UpsertStockRequest
+	1, // 3: OrderService.GetStock:input_type -> GetStockRequest
+	4, // 4: OrderService.WithholdStock:input_type -> WithholdStockRequest
+	5, // 5: OrderService.ReturnStock:input_type -> ReturnStockRequest
+	6, // 6: OrderService.UpsertStock:output_type -> google.protobuf.Empty
+	2, // 7: OrderService.GetStock:output_type -> GetStockResponse
+	6, // 8: OrderService.WithholdStock:output_type -> google.protobuf.Empty
+	6, // 9: OrderService.ReturnStock:output_type -> google.protobuf.Empty
 	6, // [6:10] is the sub-list for method output_type
 	2, // [2:6] is the sub-list for method input_type
 	2, // [2:2] is the sub-list for extension type_name
@@ -427,13 +426,13 @@ var file_stock_svc_proto_stock_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_stock_svc_proto_stock_proto_init() }
-func file_stock_svc_proto_stock_proto_init() {
-	if File_stock_svc_proto_stock_proto != nil {
+func init() { file_order_proto_init() }
+func file_order_proto_init() {
+	if File_order_proto != nil {
 		return
 	}
 	if !protoimpl.UnsafeEnabled {
-		file_stock_svc_proto_stock_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
+		file_order_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*UpsertStockRequest); i {
 			case 0:
 				return &v.state
@@ -445,7 +444,7 @@ func file_stock_svc_proto_stock_proto_init() {
 				return nil
 			}
 		}
-		file_stock_svc_proto_stock_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
+		file_order_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetStockRequest); i {
 			case 0:
 				return &v.state
@@ -457,7 +456,7 @@ func file_stock_svc_proto_stock_proto_init() {
 				return nil
 			}
 		}
-		file_stock_svc_proto_stock_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+		file_order_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*GetStockResponse); i {
 			case 0:
 				return &v.state
@@ -469,7 +468,7 @@ func file_stock_svc_proto_stock_proto_init() {
 				return nil
 			}
 		}
-		file_stock_svc_proto_stock_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
+		file_order_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*StockInfo); i {
 			case 0:
 				return &v.state
@@ -481,7 +480,7 @@ func file_stock_svc_proto_stock_proto_init() {
 				return nil
 			}
 		}
-		file_stock_svc_proto_stock_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
+		file_order_proto_msgTypes[4].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*WithholdStockRequest); i {
 			case 0:
 				return &v.state
@@ -493,7 +492,7 @@ func file_stock_svc_proto_stock_proto_init() {
 				return nil
 			}
 		}
-		file_stock_svc_proto_stock_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
+		file_order_proto_msgTypes[5].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*ReturnStockRequest); i {
 			case 0:
 				return &v.state
@@ -510,18 +509,18 @@ func file_stock_svc_proto_stock_proto_init() {
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: file_stock_svc_proto_stock_proto_rawDesc,
+			RawDescriptor: file_order_proto_rawDesc,
 			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_stock_svc_proto_stock_proto_goTypes,
-		DependencyIndexes: file_stock_svc_proto_stock_proto_depIdxs,
-		MessageInfos:      file_stock_svc_proto_stock_proto_msgTypes,
+		GoTypes:           file_order_proto_goTypes,
+		DependencyIndexes: file_order_proto_depIdxs,
+		MessageInfos:      file_order_proto_msgTypes,
 	}.Build()
-	File_stock_svc_proto_stock_proto = out.File
-	file_stock_svc_proto_stock_proto_rawDesc = nil
-	file_stock_svc_proto_stock_proto_goTypes = nil
-	file_stock_svc_proto_stock_proto_depIdxs = nil
+	File_order_proto = out.File
+	file_order_proto_rawDesc = nil
+	file_order_proto_goTypes = nil
+	file_order_proto_depIdxs = nil
 }
