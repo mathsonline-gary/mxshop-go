@@ -1,7 +1,6 @@
-version: '3.8'
 services:
 
-# For all the services mounted into a single container, you may need the following configs.
+  # For all the services mounted into a single container, you may need the following configs.
   mxshop:
     build:
       context: .
@@ -11,27 +10,27 @@ services:
     volumes:
       - .:/app
 
-# For independent container for each microservice, you may need the following configs.
-# Remember to your RPC callings via [service_name]:[service_port]
-# e.g. client := client_stub.NewHelloServiceClient("tcp", "user_svc:9090")
+  # For independent container for each microservice, you may need the following configs.
+  # Remember to your RPC callings via [service_name]:[service_port]
+  # e.g. client := client_stub.NewHelloServiceClient("tcp", "user_svc:9090")
 
-#  user_api:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - "8080:8080"
-#    volumes:
-#      - ./user_api:/app/user_api
-#
-#  user_svc:
-#    build:
-#      context: .
-#      dockerfile: user_svc/docker/Dockerfile
-#    ports:
-#      - "9090:9090"
-#    volumes:
-#      - ./user_svc:/app/user_svc
+  #  user_api:
+  #    build:
+  #      context: .
+  #      dockerfile: Dockerfile
+  #    ports:
+  #      - "8080:8080"
+  #    volumes:
+  #      - ./user_api:/app/user_api
+  #
+  #  user_svc:
+  #    build:
+  #      context: .
+  #      dockerfile: user_svc/docker/Dockerfile
+  #    ports:
+  #      - "9090:9090"
+  #    volumes:
+  #      - ./user_svc:/app/user_svc
 
   mysql:
     image: 'mysql/mysql-server:8.0'
