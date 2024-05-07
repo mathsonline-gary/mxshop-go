@@ -1,7 +1,7 @@
 package rpcserver
 
 import (
-	"mxshop-go/pkg/host"
+	"github.com/zycgary/mxshop-go/pkg/host"
 	"net"
 	"net/url"
 

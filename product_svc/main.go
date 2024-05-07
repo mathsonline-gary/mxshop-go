@@ -9,10 +9,10 @@ import (
 	"os/signal"
 	"syscall"
 
-	"mxshop-go/product_svc/global"
-	"mxshop-go/product_svc/handler"
-	"mxshop-go/product_svc/initialize"
-	productproto "mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_svc/global"
+	"github.com/zycgary/mxshop-go/product_svc/handler"
+	"github.com/zycgary/mxshop-go/product_svc/initialize"
+	productproto "github.com/zycgary/mxshop-go/product_svc/proto"
 
 	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/go-uuid"

@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"mxshop-go/user_api/global"
-	"mxshop-go/user_api/initialize"
+	"github.com/zycgary/mxshop-go/user_api/global"
+	"github.com/zycgary/mxshop-go/user_api/initialize"
 
 	"github.com/gin-gonic/gin"
 )

@@ -2,8 +2,8 @@ package user_controller
 
 import (
 	"context"
-	upb "mxshop-go/api/user/v1"
-	usvc "mxshop-go/app/user/svc/service/v1"
+	upb "github.com/zycgary/mxshop-go/api/user/v1"
+	usvc "github.com/zycgary/mxshop-go/app/user/svc/service/v1"
 )
 
 type userController struct {

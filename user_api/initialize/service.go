@@ -3,8 +3,8 @@ package initialize
 import (
 	"fmt"
 
-	"mxshop-go/user_api/global"
-	"mxshop-go/user_api/proto"
+	"github.com/zycgary/mxshop-go/user_api/global"
+	"github.com/zycgary/mxshop-go/user_api/proto"
 
 	_ "github.com/mbobakov/grpc-consul-resolver"
 	"go.uber.org/zap"

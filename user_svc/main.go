@@ -9,10 +9,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"mxshop-go/user_svc/global"
-	"mxshop-go/user_svc/handler"
-	"mxshop-go/user_svc/initialize"
-	userproto "mxshop-go/user_svc/proto"
+	"github.com/zycgary/mxshop-go/user_svc/data"
+	"github.com/zycgary/mxshop-go/user_svc/global"
+	"github.com/zycgary/mxshop-go/user_svc/handler"
+	"github.com/zycgary/mxshop-go/user_svc/initialize"
+	userproto "github.com/zycgary/mxshop-go/user_svc/proto"
 
 	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/go-uuid"
@@ -36,7 +37,8 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	userproto.RegisterUserServiceServer(s, &handler.UserServiceServer{})
+	userRepo := data.NewUserRepo(global.DB)
+	userproto.RegisterUserServiceServer(s, handler.NewUserServiceServer(userRepo))
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 
 	client, serviceID, err := registerConsulService(*ip, *port)

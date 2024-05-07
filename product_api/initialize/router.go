@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 
-	"mxshop-go/product_api/routes"
+	"github.com/zycgary/mxshop-go/product_api/routes"
 
 	"github.com/gin-gonic/gin"
 )

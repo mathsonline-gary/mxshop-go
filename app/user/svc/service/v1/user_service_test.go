@@ -2,12 +2,13 @@ package v1
 
 import (
 	"context"
-	"mxshop-go/app/user/svc/repository/v1/mock"
 	"testing"
+
+	"github.com/zycgary/mxshop-go/app/user/svc/repository/v1/mock"
 )
 
 func TestUserIndex(t *testing.T) {
 	us := NewUserService(mock.NewUserRepository())
 
-	us.Index(context.Background(), ListMeta{})
+	_, _ = us.Index(context.Background(), ListMeta{})
 }

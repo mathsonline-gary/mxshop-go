@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"mxshop-go/product_api/global"
-	"mxshop-go/product_api/initialize"
+	"github.com/zycgary/mxshop-go/product_api/global"
+	"github.com/zycgary/mxshop-go/product_api/initialize"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

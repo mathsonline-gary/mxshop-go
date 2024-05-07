@@ -6,7 +6,7 @@ import (
 	"log"
 	"testing"
 
-	"mxshop-go/user_svc/proto"
+	"github.com/zycgary/mxshop-go/user_svc/proto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -17,18 +17,9 @@ var (
 	userClient proto.UserServiceClient
 )
 
-func Init() {
-	var err error
-	conn, err = grpc.Dial("127.0.0.1:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		log.Fatalf("did not connect: %v", err)
-	}
-	userClient = proto.NewUserServiceClient(conn)
-}
-
 func TestGetUserList(t *testing.T) {
 	var err error
-	conn, err = grpc.Dial("127.0.0.1:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err = grpc.Dial("127.0.0.1:63632", grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}

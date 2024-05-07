@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -16,6 +16,7 @@ var (
 	productClient proto.ProductServiceClient
 )
 
+// TestMain is the entry point for testing, and it will run before any test.
 func TestMain(m *testing.M) {
 	setup()
 	code := m.Run() // This will execute all tests

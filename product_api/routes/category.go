@@ -1,8 +1,8 @@
 package routes
 
 import (
-	"mxshop-go/product_api/controllers/category"
-	"mxshop-go/product_api/controllers/subcategory"
+	"github.com/zycgary/mxshop-go/product_api/controllers/category"
+	"github.com/zycgary/mxshop-go/product_api/controllers/subcategory"
 
 	"github.com/gin-gonic/gin"
 )

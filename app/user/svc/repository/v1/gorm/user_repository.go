@@ -2,7 +2,7 @@ package mock
 
 import (
 	"context"
-	urv1 "mxshop-go/app/user/svc/repository/v1"
+	urv1 "github.com/zycgary/mxshop-go/app/user/svc/repository/v1"
 
 	"gorm.io/gorm"
 )

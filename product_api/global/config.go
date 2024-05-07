@@ -1,6 +1,6 @@
 package global
 
-import "mxshop-go/product_api/config"
+import "github.com/zycgary/mxshop-go/product_api/config"
 
 var (
 	Config      = config.Config{}

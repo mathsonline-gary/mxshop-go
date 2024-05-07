@@ -1,6 +1,6 @@
 package global
 
-import "mxshop-go/user_svc/config"
+import "github.com/zycgary/mxshop-go/user_svc/config"
 
 var (
 	Config      = config.Config{}

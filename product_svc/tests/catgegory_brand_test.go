@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 )
 
 func TestGetCategoryBrandList(t *testing.T) {

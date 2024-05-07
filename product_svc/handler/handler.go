@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 
 	"gorm.io/gorm"
 )
