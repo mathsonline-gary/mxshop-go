@@ -6,7 +6,7 @@ import (
 	"syscall"
 	"time"
 
-	"mxshop-go/gmicro/mesh"
+	"github.com/zycgary/mxshop-go/gmicro/mesh"
 
 	"github.com/google/uuid"
 )

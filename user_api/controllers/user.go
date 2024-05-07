@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"time"
 
-	"mxshop-go/user_api/global"
-	"mxshop-go/user_api/proto"
+	"github.com/zycgary/mxshop-go/user_api/global"
+	"github.com/zycgary/mxshop-go/user_api/proto"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

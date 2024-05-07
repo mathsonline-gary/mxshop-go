@@ -1,7 +1,7 @@
 package routes
 
 import (
-	"mxshop-go/product_api/controllers/product"
+	"github.com/zycgary/mxshop-go/product_api/controllers/product"
 
 	"github.com/gin-gonic/gin"
 )

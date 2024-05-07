@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"slices"
 
-	"mxshop-go/stock_svc/global"
-	"mxshop-go/stock_svc/model"
-	"mxshop-go/stock_svc/proto"
+	"github.com/zycgary/mxshop-go/stock_svc/global"
+	"github.com/zycgary/mxshop-go/stock_svc/model"
+	"github.com/zycgary/mxshop-go/stock_svc/proto"
 
 	"github.com/go-redsync/redsync/v4"
 	"github.com/go-redsync/redsync/v4/redis/goredis/v9"

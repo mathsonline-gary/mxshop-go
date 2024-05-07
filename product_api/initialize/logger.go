@@ -3,7 +3,7 @@ package initialize
 import (
 	"fmt"
 
-	"mxshop-go/product_api/global"
+	"github.com/zycgary/mxshop-go/product_api/global"
 
 	"go.uber.org/zap"
 )

@@ -3,7 +3,7 @@ package data
 import (
 	"errors"
 
-	"mxshop-go/user_svc/model"
+	"github.com/zycgary/mxshop-go/user_svc/model"
 
 	"gorm.io/gorm"
 )

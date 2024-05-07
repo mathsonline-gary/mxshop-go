@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"mxshop-go/user_svc/global"
+	"github.com/zycgary/mxshop-go/user_svc/global"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

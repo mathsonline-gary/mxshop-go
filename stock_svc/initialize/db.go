@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	"mxshop-go/stock_svc/global"
-	"mxshop-go/stock_svc/model"
+	"github.com/zycgary/mxshop-go/stock_svc/global"
+	"github.com/zycgary/mxshop-go/stock_svc/model"
 
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"

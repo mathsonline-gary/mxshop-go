@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"mxshop-go/user_svc/global"
+	"github.com/zycgary/mxshop-go/user_svc/global"
 
 	"github.com/nacos-group/nacos-sdk-go/v2/clients"
 	"github.com/nacos-group/nacos-sdk-go/v2/common/constant"

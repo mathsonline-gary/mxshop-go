@@ -8,10 +8,10 @@ import (
 	"strings"
 	"time"
 
-	"mxshop-go/user_svc/data"
-	. "mxshop-go/user_svc/global"
-	"mxshop-go/user_svc/model"
-	userproto "mxshop-go/user_svc/proto"
+	"github.com/zycgary/mxshop-go/user_svc/data"
+	. "github.com/zycgary/mxshop-go/user_svc/global"
+	"github.com/zycgary/mxshop-go/user_svc/model"
+	userproto "github.com/zycgary/mxshop-go/user_svc/proto"
 
 	"github.com/anaskhan96/go-password-encoder"
 	"go.uber.org/zap"

@@ -5,15 +5,15 @@ import (
 	"errors"
 	"testing"
 
-	"mxshop-go/user_svc/data/mock"
-	"mxshop-go/user_svc/model"
+	"github.com/zycgary/mxshop-go/user_svc/data/mock"
+	"github.com/zycgary/mxshop-go/user_svc/model"
 
 	"github.com/stretchr/testify/assert"
 	"go.uber.org/mock/gomock"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	userproto "mxshop-go/user_svc/proto"
+	userproto "github.com/zycgary/mxshop-go/user_svc/proto"
 )
 
 func TestUserServiceServer_GetUserList(t *testing.T) {

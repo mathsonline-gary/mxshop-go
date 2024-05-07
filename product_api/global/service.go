@@ -1,6 +1,6 @@
 package global
 
-import "mxshop-go/product_svc/proto"
+import "github.com/zycgary/mxshop-go/product_svc/proto"
 
 var (
 	ProductSvcClient proto.ProductServiceClient

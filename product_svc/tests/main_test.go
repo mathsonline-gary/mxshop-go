@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"

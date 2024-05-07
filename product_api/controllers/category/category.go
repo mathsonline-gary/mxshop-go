@@ -6,10 +6,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"mxshop-go/product_api/controllers"
-	"mxshop-go/product_api/global"
-	"mxshop-go/product_api/requests"
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_api/controllers"
+	"github.com/zycgary/mxshop-go/product_api/global"
+	"github.com/zycgary/mxshop-go/product_api/requests"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

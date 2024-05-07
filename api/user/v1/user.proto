@@ -66,3 +66,8 @@ message CheckPasswordRequest {
 message CheckPasswordResponse {
   bool success = 1;
 }
+
+enum Error {
+  USER_NOT_FOUND = 0;
+  USER_EXISTS = 1;
+}

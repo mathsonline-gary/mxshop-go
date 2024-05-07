@@ -2,7 +2,7 @@ package v1
 
 import (
 	"context"
-	udv1 "mxshop-go/app/user/svc/repository/v1"
+	udv1 "github.com/zycgary/mxshop-go/app/user/svc/repository/v1"
 )
 
 type UserService interface {

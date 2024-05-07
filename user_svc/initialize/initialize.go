@@ -1,8 +1,8 @@
 package initialize
 
 import (
-	"mxshop-go/user_svc/global"
-	"mxshop-go/user_svc/utils"
+	"github.com/zycgary/mxshop-go/user_svc/global"
+	"github.com/zycgary/mxshop-go/user_svc/utils"
 )
 
 func Init() {

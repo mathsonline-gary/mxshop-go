@@ -10,7 +10,7 @@
 package mock
 
 import (
-	model "mxshop-go/user_svc/model"
+	model "github.com/zycgary/mxshop-go/user_svc/model"
 	reflect "reflect"
 
 	gomock "go.uber.org/mock/gomock"

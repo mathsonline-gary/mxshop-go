@@ -6,7 +6,7 @@ import (
 	"os/signal"
 	"sync"
 
-	"mxshop-go/gmicro/mesh"
+	"github.com/zycgary/mxshop-go/gmicro/mesh"
 )
 
 type App struct {

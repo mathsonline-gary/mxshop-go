@@ -3,8 +3,8 @@ package subcategory
 import (
 	"strconv"
 
-	"mxshop-go/product_api/global"
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_api/global"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"

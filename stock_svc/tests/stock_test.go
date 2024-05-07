@@ -5,7 +5,7 @@ import (
 	"sync"
 	"testing"
 
-	"mxshop-go/stock_svc/proto"
+	"github.com/zycgary/mxshop-go/stock_svc/proto"
 
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"

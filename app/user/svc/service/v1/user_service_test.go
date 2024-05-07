@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"mxshop-go/app/user/svc/repository/v1/mock"
+	"github.com/zycgary/mxshop-go/app/user/svc/repository/v1/mock"
 )
 
 func TestUserIndex(t *testing.T) {

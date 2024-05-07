@@ -6,7 +6,7 @@ import (
 	"regexp"
 	"testing"
 
-	"mxshop-go/user_svc/model"
+	"github.com/zycgary/mxshop-go/user_svc/model"
 
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"

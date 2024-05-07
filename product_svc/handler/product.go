@@ -3,9 +3,9 @@ package handler
 import (
 	"context"
 
-	"mxshop-go/product_svc/global"
-	"mxshop-go/product_svc/model"
-	"mxshop-go/product_svc/proto"
+	"github.com/zycgary/mxshop-go/product_svc/global"
+	"github.com/zycgary/mxshop-go/product_svc/model"
+	"github.com/zycgary/mxshop-go/product_svc/proto"
 
 	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
