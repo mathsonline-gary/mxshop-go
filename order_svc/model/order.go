@@ -7,7 +7,7 @@ type ShoppingCart struct {
 	UserID    int32 `gorm:"type:int;index" json:"user_id"`
 	ProductID int32 `gorm:"type:int;index" json:"product_id"`
 	Quality   int32 `gorm:"type:int" json:"quality"`
-	Checked   bool  `gorm:"type:bool" json:"checked"`
+	Selected  bool  `gorm:"type:bool" json:"selected"`
 	Timestamps
 	SoftDelete
 }

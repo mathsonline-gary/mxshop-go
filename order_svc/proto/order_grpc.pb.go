@@ -23,10 +23,16 @@ const _ = grpc.SupportPackageIsVersion7
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type OrderServiceClient interface {
-	UpsertStock(ctx context.Context, in *UpsertStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	GetStock(ctx context.Context, in *GetStockRequest, opts ...grpc.CallOption) (*GetStockResponse, error)
-	WithholdStock(ctx context.Context, in *WithholdStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
-	ReturnStock(ctx context.Context, in *ReturnStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Shopping cart services
+	ListCartItems(ctx context.Context, in *ListCartItemsRequest, opts ...grpc.CallOption) (*ListCartItemsResponse, error)
+	AddCartItem(ctx context.Context, in *AddCartItemRequest, opts ...grpc.CallOption) (*AddCartItemResponse, error)
+	UpdateCartItem(ctx context.Context, in *UpdateCartItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	DeleteCartItem(ctx context.Context, in *DeleteCartItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// Order services
+	CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error)
+	ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (*ListOrdersResponse, error)
+	GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error)
+	UpdateOrderStatus(ctx context.Context, in *UpdateOrderStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
 
 type orderServiceClient struct {
@@ -37,36 +43,72 @@ func NewOrderServiceClient(cc grpc.ClientConnInterface) OrderServiceClient {
 	return &orderServiceClient{cc}
 }
 
-func (c *orderServiceClient) UpsertStock(ctx context.Context, in *UpsertStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
-	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/OrderService/UpsertStock", in, out, opts...)
+func (c *orderServiceClient) ListCartItems(ctx context.Context, in *ListCartItemsRequest, opts ...grpc.CallOption) (*ListCartItemsResponse, error) {
+	out := new(ListCartItemsResponse)
+	err := c.cc.Invoke(ctx, "/OrderService/ListCartItems", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *orderServiceClient) GetStock(ctx context.Context, in *GetStockRequest, opts ...grpc.CallOption) (*GetStockResponse, error) {
-	out := new(GetStockResponse)
-	err := c.cc.Invoke(ctx, "/OrderService/GetStock", in, out, opts...)
+func (c *orderServiceClient) AddCartItem(ctx context.Context, in *AddCartItemRequest, opts ...grpc.CallOption) (*AddCartItemResponse, error) {
+	out := new(AddCartItemResponse)
+	err := c.cc.Invoke(ctx, "/OrderService/AddCartItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *orderServiceClient) WithholdStock(ctx context.Context, in *WithholdStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceClient) UpdateCartItem(ctx context.Context, in *UpdateCartItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/OrderService/WithholdStock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/OrderService/UpdateCartItem", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
 	return out, nil
 }
 
-func (c *orderServiceClient) ReturnStock(ctx context.Context, in *ReturnStockRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+func (c *orderServiceClient) DeleteCartItem(ctx context.Context, in *DeleteCartItemRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
-	err := c.cc.Invoke(ctx, "/OrderService/ReturnStock", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/OrderService/DeleteCartItem", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) CreateOrder(ctx context.Context, in *CreateOrderRequest, opts ...grpc.CallOption) (*CreateOrderResponse, error) {
+	out := new(CreateOrderResponse)
+	err := c.cc.Invoke(ctx, "/OrderService/CreateOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) ListOrders(ctx context.Context, in *ListOrdersRequest, opts ...grpc.CallOption) (*ListOrdersResponse, error) {
+	out := new(ListOrdersResponse)
+	err := c.cc.Invoke(ctx, "/OrderService/ListOrders", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) GetOrder(ctx context.Context, in *GetOrderRequest, opts ...grpc.CallOption) (*GetOrderResponse, error) {
+	out := new(GetOrderResponse)
+	err := c.cc.Invoke(ctx, "/OrderService/GetOrder", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *orderServiceClient) UpdateOrderStatus(ctx context.Context, in *UpdateOrderStatusRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, "/OrderService/UpdateOrderStatus", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -77,10 +119,16 @@ func (c *orderServiceClient) ReturnStock(ctx context.Context, in *ReturnStockReq
 // All implementations must embed UnimplementedOrderServiceServer
 // for forward compatibility
 type OrderServiceServer interface {
-	UpsertStock(context.Context, *UpsertStockRequest) (*emptypb.Empty, error)
-	GetStock(context.Context, *GetStockRequest) (*GetStockResponse, error)
-	WithholdStock(context.Context, *WithholdStockRequest) (*emptypb.Empty, error)
-	ReturnStock(context.Context, *ReturnStockRequest) (*emptypb.Empty, error)
+	// Shopping cart services
+	ListCartItems(context.Context, *ListCartItemsRequest) (*ListCartItemsResponse, error)
+	AddCartItem(context.Context, *AddCartItemRequest) (*AddCartItemResponse, error)
+	UpdateCartItem(context.Context, *UpdateCartItemRequest) (*emptypb.Empty, error)
+	DeleteCartItem(context.Context, *DeleteCartItemRequest) (*emptypb.Empty, error)
+	// Order services
+	CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error)
+	ListOrders(context.Context, *ListOrdersRequest) (*ListOrdersResponse, error)
+	GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error)
+	UpdateOrderStatus(context.Context, *UpdateOrderStatusRequest) (*emptypb.Empty, error)
 	mustEmbedUnimplementedOrderServiceServer()
 }
 
@@ -88,17 +136,29 @@ type OrderServiceServer interface {
 type UnimplementedOrderServiceServer struct {
 }
 
-func (UnimplementedOrderServiceServer) UpsertStock(context.Context, *UpsertStockRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertStock not implemented")
+func (UnimplementedOrderServiceServer) ListCartItems(context.Context, *ListCartItemsRequest) (*ListCartItemsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListCartItems not implemented")
 }
-func (UnimplementedOrderServiceServer) GetStock(context.Context, *GetStockRequest) (*GetStockResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetStock not implemented")
+func (UnimplementedOrderServiceServer) AddCartItem(context.Context, *AddCartItemRequest) (*AddCartItemResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method AddCartItem not implemented")
 }
-func (UnimplementedOrderServiceServer) WithholdStock(context.Context, *WithholdStockRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method WithholdStock not implemented")
+func (UnimplementedOrderServiceServer) UpdateCartItem(context.Context, *UpdateCartItemRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCartItem not implemented")
 }
-func (UnimplementedOrderServiceServer) ReturnStock(context.Context, *ReturnStockRequest) (*emptypb.Empty, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method ReturnStock not implemented")
+func (UnimplementedOrderServiceServer) DeleteCartItem(context.Context, *DeleteCartItemRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCartItem not implemented")
+}
+func (UnimplementedOrderServiceServer) CreateOrder(context.Context, *CreateOrderRequest) (*CreateOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) ListOrders(context.Context, *ListOrdersRequest) (*ListOrdersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListOrders not implemented")
+}
+func (UnimplementedOrderServiceServer) GetOrder(context.Context, *GetOrderRequest) (*GetOrderResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOrder not implemented")
+}
+func (UnimplementedOrderServiceServer) UpdateOrderStatus(context.Context, *UpdateOrderStatusRequest) (*emptypb.Empty, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateOrderStatus not implemented")
 }
 func (UnimplementedOrderServiceServer) mustEmbedUnimplementedOrderServiceServer() {}
 
@@ -113,74 +173,146 @@ func RegisterOrderServiceServer(s grpc.ServiceRegistrar, srv OrderServiceServer)
 	s.RegisterService(&OrderService_ServiceDesc, srv)
 }
 
-func _OrderService_UpsertStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertStockRequest)
+func _OrderService_ListCartItems_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListCartItemsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceServer).UpsertStock(ctx, in)
+		return srv.(OrderServiceServer).ListCartItems(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/OrderService/UpsertStock",
+		FullMethod: "/OrderService/ListCartItems",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).UpsertStock(ctx, req.(*UpsertStockRequest))
+		return srv.(OrderServiceServer).ListCartItems(ctx, req.(*ListCartItemsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrderService_GetStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetStockRequest)
+func _OrderService_AddCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddCartItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceServer).GetStock(ctx, in)
+		return srv.(OrderServiceServer).AddCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/OrderService/GetStock",
+		FullMethod: "/OrderService/AddCartItem",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).GetStock(ctx, req.(*GetStockRequest))
+		return srv.(OrderServiceServer).AddCartItem(ctx, req.(*AddCartItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrderService_WithholdStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(WithholdStockRequest)
+func _OrderService_UpdateCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCartItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceServer).WithholdStock(ctx, in)
+		return srv.(OrderServiceServer).UpdateCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/OrderService/WithholdStock",
+		FullMethod: "/OrderService/UpdateCartItem",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).WithholdStock(ctx, req.(*WithholdStockRequest))
+		return srv.(OrderServiceServer).UpdateCartItem(ctx, req.(*UpdateCartItemRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
 
-func _OrderService_ReturnStock_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(ReturnStockRequest)
+func _OrderService_DeleteCartItem_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCartItemRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(OrderServiceServer).ReturnStock(ctx, in)
+		return srv.(OrderServiceServer).DeleteCartItem(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/OrderService/ReturnStock",
+		FullMethod: "/OrderService/DeleteCartItem",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(OrderServiceServer).ReturnStock(ctx, req.(*ReturnStockRequest))
+		return srv.(OrderServiceServer).DeleteCartItem(ctx, req.(*DeleteCartItemRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_CreateOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).CreateOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/OrderService/CreateOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).CreateOrder(ctx, req.(*CreateOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_ListOrders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListOrdersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).ListOrders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/OrderService/ListOrders",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).ListOrders(ctx, req.(*ListOrdersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_GetOrder_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOrderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).GetOrder(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/OrderService/GetOrder",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).GetOrder(ctx, req.(*GetOrderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _OrderService_UpdateOrderStatus_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateOrderStatusRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(OrderServiceServer).UpdateOrderStatus(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/OrderService/UpdateOrderStatus",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(OrderServiceServer).UpdateOrderStatus(ctx, req.(*UpdateOrderStatusRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -193,20 +325,36 @@ var OrderService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*OrderServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UpsertStock",
-			Handler:    _OrderService_UpsertStock_Handler,
+			MethodName: "ListCartItems",
+			Handler:    _OrderService_ListCartItems_Handler,
 		},
 		{
-			MethodName: "GetStock",
-			Handler:    _OrderService_GetStock_Handler,
+			MethodName: "AddCartItem",
+			Handler:    _OrderService_AddCartItem_Handler,
 		},
 		{
-			MethodName: "WithholdStock",
-			Handler:    _OrderService_WithholdStock_Handler,
+			MethodName: "UpdateCartItem",
+			Handler:    _OrderService_UpdateCartItem_Handler,
 		},
 		{
-			MethodName: "ReturnStock",
-			Handler:    _OrderService_ReturnStock_Handler,
+			MethodName: "DeleteCartItem",
+			Handler:    _OrderService_DeleteCartItem_Handler,
+		},
+		{
+			MethodName: "CreateOrder",
+			Handler:    _OrderService_CreateOrder_Handler,
+		},
+		{
+			MethodName: "ListOrders",
+			Handler:    _OrderService_ListOrders_Handler,
+		},
+		{
+			MethodName: "GetOrder",
+			Handler:    _OrderService_GetOrder_Handler,
+		},
+		{
+			MethodName: "UpdateOrderStatus",
+			Handler:    _OrderService_UpdateOrderStatus_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
