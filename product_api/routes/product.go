@@ -15,12 +15,12 @@ func setProductRoutes(rg *gin.RouterGroup) {
 	// Store a new product
 	products.POST("/", product.Store)
 
-	// Get a product by ID
+	// Get a product by IncrementID
 	products.GET("/:id", product.Show)
 
-	// Update a product by ID
+	// Update a product by IncrementID
 	products.PUT("/:id", product.Update)
 
-	// Delete a product by ID
+	// Delete a product by IncrementID
 	products.DELETE("/:id", product.Destroy)
 }

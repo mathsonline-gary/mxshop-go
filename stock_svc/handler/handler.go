@@ -26,7 +26,7 @@ var _ proto.StockServiceServer = (*StockServiceServer)(nil)
 
 func (s StockServiceServer) UpsertStock(_ context.Context, request *proto.UpsertStockRequest) (*emptypb.Empty, error) {
 	if request.ProductId <= 0 {
-		return nil, status.Errorf(codes.InvalidArgument, "invalid product ID")
+		return nil, status.Errorf(codes.InvalidArgument, "invalid product IncrementID")
 	}
 	if request.Quantity < 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid quantity")
@@ -76,7 +76,7 @@ func (s StockServiceServer) WithholdStock(_ context.Context, request *proto.With
 		}
 	}
 
-	// sort request data by product ID to acquire pessimistic locks in a consistent order, which can help prevent deadlocks
+	// sort request data by product IncrementID to acquire pessimistic locks in a consistent order, which can help prevent deadlocks
 	if len(request.Data) > 1 {
 		slices.SortFunc(request.Data, func(a, b *proto.StockInfo) int {
 			if a.ProductId < b.ProductId {

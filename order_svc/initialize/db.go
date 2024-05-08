@@ -46,7 +46,7 @@ func initDB() {
 	}
 
 	// Auto migrate models
-	if err := global.DB.AutoMigrate(&model.ShoppingCart{}, &model.Order{}, &model.OrderItem{}); err != nil {
+	if err := global.DB.AutoMigrate(&model.CartItem{}, &model.Order{}, &model.OrderItem{}); err != nil {
 		zap.S().Fatal("AutoMigrate tables failed: ", err)
 	}
 

@@ -2,18 +2,18 @@ package model
 
 import "time"
 
-type ShoppingCart struct {
-	ID
+type CartItem struct {
+	IncrementID
 	UserID    int32 `gorm:"type:int;index" json:"user_id"`
 	ProductID int32 `gorm:"type:int;index" json:"product_id"`
-	Quality   int32 `gorm:"type:int" json:"quality"`
+	Quantity  int32 `gorm:"type:int" json:"quantity"`
 	Selected  bool  `gorm:"type:bool" json:"selected"`
 	Timestamps
 	SoftDelete
 }
 
 type Order struct {
-	ID
+	IncrementID
 	UserID          int32     `gorm:"type:int;index" json:"user_id"`
 	SerialNumber    string    `gorm:"type:varchar(100);index" json:"serial_number"`
 	PaymentMethod   string    `gorm:"type:varchar(20)" json:"payment_method"`
@@ -30,7 +30,7 @@ type Order struct {
 }
 
 type OrderItem struct {
-	ID
+	IncrementID
 	OrderID           int32   `gorm:"type:int;index" json:"order_id"`
 	ProductID         int32   `gorm:"type:int;index" json:"product_id"`
 	ProductName       string  `gorm:"type:varchar(100)" json:"product_name"`

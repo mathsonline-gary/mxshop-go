@@ -9,6 +9,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/zycgary/mxshop-go/order_svc/data"
 	"github.com/zycgary/mxshop-go/order_svc/global"
 	"github.com/zycgary/mxshop-go/order_svc/handler"
 	"github.com/zycgary/mxshop-go/order_svc/initialize"
@@ -35,7 +36,8 @@ func main() {
 	}
 
 	s := grpc.NewServer()
-	orderproto.RegisterOrderServiceServer(s, &handler.OrderServiceServer{})
+	orderRepo := data.NewOrderRepo(global.DB)
+	orderproto.RegisterOrderServiceServer(s, handler.NewOrderServiceServer(orderRepo))
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 
 	client, serviceID, err := registerConsulService(*ip, *port)

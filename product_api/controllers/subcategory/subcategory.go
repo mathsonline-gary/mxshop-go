@@ -15,7 +15,7 @@ func Index(ctx *gin.Context) {
 	id := ctx.Param("id")
 	idInt, err := strconv.Atoi(id)
 	if err != nil {
-		zap.S().Error("[SubCategory] [List] Invalid category ID: ", id)
+		zap.S().Error("[SubCategory] [List] Invalid category IncrementID: ", id)
 		ctx.JSON(200, gin.H{
 			"data": data,
 			"meta": gin.H{
@@ -29,7 +29,7 @@ func Index(ctx *gin.Context) {
 		Id: int32(idInt),
 	})
 	if err != nil {
-		zap.S().Errorf("[SubCategory] [List] failed to get subcategories of category ID %d: %s", idInt, err.Error())
+		zap.S().Errorf("[SubCategory] [List] failed to get subcategories of category IncrementID %d: %s", idInt, err.Error())
 		ctx.JSON(200, gin.H{
 			"data": data,
 			"meta": gin.H{

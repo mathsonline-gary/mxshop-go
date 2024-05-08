@@ -9,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type ID struct {
+type IncrementID struct {
 	ID int32 `gorm:"primarykey;type:int" json:"id"`
 }
 

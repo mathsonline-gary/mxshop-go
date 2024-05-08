@@ -67,7 +67,7 @@ func TestUpsertStock(t *testing.T) {
 			},
 			expected: expected{
 				rsp: nil,
-				err: status.Errorf(codes.InvalidArgument, "invalid product ID"),
+				err: status.Errorf(codes.InvalidArgument, "invalid product IncrementID"),
 			},
 		},
 		{
@@ -141,7 +141,7 @@ func TestGetStock(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid product ID",
+			name: "invalid product IncrementID",
 			args: args{
 				ctx: context.Background(),
 				req: &proto.GetStockRequest{
@@ -431,7 +431,7 @@ func TestReturnStock(t *testing.T) {
 			},
 		},
 		{
-			name: "invalid product ID",
+			name: "invalid product IncrementID",
 			args: args{
 				ctx: context.Background(),
 				req: &proto.ReturnStockRequest{
