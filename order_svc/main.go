@@ -26,8 +26,8 @@ import (
 func main() {
 	initialize.Init()
 	var (
-		ip   = flag.String("ip", global.Config.AppConfig.Host, "The user service IP")
-		port = flag.Int("port", global.Config.AppConfig.Port, "The user service port")
+		ip   = flag.String("ip", global.Config.App.Host, "The user service IP")
+		port = flag.Int("port", int(global.Config.App.Port), "The user service port")
 	)
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("%s:%d", *ip, *port))
@@ -65,20 +65,20 @@ func main() {
 
 func registerConsulService(addr string, port int) (client *consulAPI.Client, serviceID string, err error) {
 	config := consulAPI.DefaultConfig()
-	config.Address = fmt.Sprintf("%s:%d", global.Config.ConsulConfig.Host, global.Config.ConsulConfig.Port)
+	config.Address = fmt.Sprintf("%s:%d", global.Config.Consul.Host, global.Config.Consul.Port)
 	client, err = consulAPI.NewClient(config)
 	if err != nil {
 		return nil, "", err
 	}
 	serviceID, _ = uuid.GenerateUUID()
 	registration := &consulAPI.AgentServiceRegistration{
-		Name:    global.Config.AppConfig.Name,
+		Name:    global.Config.App.Name,
 		ID:      serviceID,
 		Tags:    []string{"mxshop", "order", "svc"},
 		Address: addr,
 		Port:    port,
 		Check: &consulAPI.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", global.Config.ConsulConfig.OrderSvc.Check.Host, port),
+			GRPC:                           fmt.Sprintf("%s:%d", addr, port),
 			Timeout:                        "5s",
 			Interval:                       "10s",
 			DeregisterCriticalServiceAfter: "30s",

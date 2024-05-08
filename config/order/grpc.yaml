@@ -20,12 +20,12 @@ db:
 
 # Service discovery
 sd:
-  driver: 'consul'
+  driver: 'local' # local, consul
 
 # Dynamic configuration
 dc:
-  driver: 'nacos'
-  type: 'json'
+  driver: 'local' # local, nacos
+  type: 'yaml' # json, yaml
 
 consul:
   host: 'localhost'

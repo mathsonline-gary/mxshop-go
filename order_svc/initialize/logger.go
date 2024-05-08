@@ -12,7 +12,7 @@ func initLogger() {
 	fmt.Println("logger initializing...")
 
 	var logger *zap.Logger
-	if global.Config.AppConfig.Env == "production" {
+	if global.Config.App.Env == "production" {
 		logger, _ = zap.NewProduction()
 	} else {
 		logger, _ = zap.NewDevelopment()

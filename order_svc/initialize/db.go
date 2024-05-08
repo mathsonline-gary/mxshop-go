@@ -18,12 +18,12 @@ import (
 func initDB() {
 	fmt.Println("DB initializing...")
 
-	c := global.Config.DBConfig
+	c := global.Config.DB
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local", c.Username, c.Password, c.Host, c.Port, c.Database)
 
 	logLevel := logger.Silent
-	if global.Config.AppConfig.Debug {
+	if global.Config.App.Debug {
 		logLevel = logger.Info
 	}
 	newLogger := logger.New(
