@@ -37,7 +37,7 @@ consul:
       - 'grpc'
     check:
       protocol: 'grpc'
-      endpoint: 'host.docker.internal:50054'
+      endpoint: 'host.docker.internal'
       interval: 10
       timeout: 5
       deregister_after: 1

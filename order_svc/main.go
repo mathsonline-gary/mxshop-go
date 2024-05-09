@@ -74,11 +74,11 @@ func registerConsulService(addr string, port int) (client *consulAPI.Client, ser
 	registration := &consulAPI.AgentServiceRegistration{
 		Name:    global.Config.App.Name,
 		ID:      serviceID,
-		Tags:    []string{"mxshop", "order", "svc"},
+		Tags:    global.Config.Consul.Service.Tags,
 		Address: addr,
 		Port:    port,
 		Check: &consulAPI.AgentServiceCheck{
-			GRPC:                           "host.docker.internal:50054",
+			GRPC:                           fmt.Sprintf("%s:%d", global.Config.Consul.Service.Check.Endpoint, port),
 			Timeout:                        fmt.Sprintf("%ds", global.Config.Consul.Service.Check.Timeout),
 			Interval:                       fmt.Sprintf("%ds", global.Config.Consul.Service.Check.Interval),
 			DeregisterCriticalServiceAfter: fmt.Sprintf("%dm", global.Config.Consul.Service.Check.DeregisterAfter),
