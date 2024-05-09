@@ -78,12 +78,13 @@ func registerConsulService(addr string, port int) (client *consulAPI.Client, ser
 		Address: addr,
 		Port:    port,
 		Check: &consulAPI.AgentServiceCheck{
-			GRPC:                           fmt.Sprintf("%s:%d", addr, port),
-			Timeout:                        "5s",
-			Interval:                       "10s",
-			DeregisterCriticalServiceAfter: "30s",
+			GRPC:                           "host.docker.internal:50054",
+			Timeout:                        fmt.Sprintf("%ds", global.Config.Consul.Service.Check.Timeout),
+			Interval:                       fmt.Sprintf("%ds", global.Config.Consul.Service.Check.Interval),
+			DeregisterCriticalServiceAfter: fmt.Sprintf("%dm", global.Config.Consul.Service.Check.DeregisterAfter),
 		},
 	}
+
 	if err := client.Agent().ServiceRegister(registration); err != nil {
 		return nil, "", err
 	}

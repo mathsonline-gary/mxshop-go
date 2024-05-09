@@ -49,6 +49,7 @@ type Consul struct {
 		Tags  []string `mapstructure:"tags" json:"tags"`
 		Check struct {
 			Protocol        string `mapstructure:"protocol" json:"protocol"`
+			Endpoint        string `mapstructure:"endpoint" json:"endpoint"`
 			Interval        int32  `mapstructure:"interval" json:"interval"`
 			Timeout         int32  `mapstructure:"timeout" json:"timeout"`
 			DeregisterAfter int32  `mapstructure:"deregister_after" json:"deregister_after"`

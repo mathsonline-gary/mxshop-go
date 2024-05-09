@@ -1,7 +1,5 @@
 services:
-
-  # For all the services mounted into a single container, you may need the following configs.
-  mxshop:
+  app:
     build:
       context: .
       dockerfile: Dockerfile
@@ -9,28 +7,8 @@ services:
       - "8080:8080"
     volumes:
       - .:/app
-
-  # For independent container for each microservice, you may need the following configs.
-  # Remember to your RPC callings via [service_name]:[service_port]
-  # e.g. client := client_stub.NewHelloServiceClient("tcp", "user_svc:9090")
-
-  #  user_api:
-  #    build:
-  #      context: .
-  #      dockerfile: Dockerfile
-  #    ports:
-  #      - "8080:8080"
-  #    volumes:
-  #      - ./user_api:/app/user_api
-  #
-  #  user_svc:
-  #    build:
-  #      context: .
-  #      dockerfile: user_svc/docker/Dockerfile
-  #    ports:
-  #      - "9090:9090"
-  #    volumes:
-  #      - ./user_svc:/app/user_svc
+    networks:
+      - go-app
 
   mysql:
     image: 'mysql/mysql-server:8.0'
@@ -45,7 +23,31 @@ services:
       MYSQL_ALLOW_EMPTY_PASSWORD: 1
     volumes:
       - 'go-mysql:/var/lib/mysql'
+    networks:
+      - go-app
+
+  redis:
+    image: 'redis:alpine'
+    ports:
+      - '6379:6379'
+    volumes:
+      - 'go-redis:/data'
+    networks:
+      - go-app
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      retries: 3
+      timeout: 5s
 
 volumes:
   go-mysql:
     driver: local
+  go-redis:
+    driver: local
+
+networks:
+  go-app:
+    driver: bridge
