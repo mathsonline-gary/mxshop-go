@@ -101,7 +101,7 @@ message ListOrdersRequest {
 }
 
 message ListOrdersResponse {
-  int32 total = 1;
+  int64 total = 1;
   repeated Order data = 2;
 }
 

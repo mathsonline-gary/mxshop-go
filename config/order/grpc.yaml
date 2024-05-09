@@ -25,19 +25,19 @@ sd:
 # Dynamic configuration
 dc:
   driver: 'local' # local, nacos
-  type: 'yaml' # json, yaml
+  type: 'json' # json, yaml
 
 consul:
   host: 'localhost'
   port: 8500
   service:
-    name: 'order_grpc'
     tags:
       - 'mxshop'
       - 'order'
       - 'grpc'
     check:
       protocol: 'grpc'
+      endpoint: 'host.docker.internal:50054'
       interval: 10
       timeout: 5
       deregister_after: 1
@@ -46,7 +46,7 @@ nacos:
     host: "localhost"
     port: 8848
   client:
-    namespace: "e07b42ae-d767-44d2-83ea-f0bbe448c4dc"
+    namespace: "f5e80e5a-6596-40aa-a979-f194173966d5"
     username: ""
     password: ""
     data_id: "order_grpc"

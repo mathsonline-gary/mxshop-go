@@ -40,6 +40,21 @@ func (m *MockOrderRepo) EXPECT() *MockOrderRepoMockRecorder {
 	return m.recorder
 }
 
+// CountOrders mocks base method.
+func (m *MockOrderRepo) CountOrders(arg0 context.Context, arg1 int32) (int64, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "CountOrders", arg0, arg1)
+	ret0, _ := ret[0].(int64)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// CountOrders indicates an expected call of CountOrders.
+func (mr *MockOrderRepoMockRecorder) CountOrders(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "CountOrders", reflect.TypeOf((*MockOrderRepo)(nil).CountOrders), arg0, arg1)
+}
+
 // DeleteCartItem mocks base method.
 func (m *MockOrderRepo) DeleteCartItem(arg0 context.Context, arg1 int32) error {
 	m.ctrl.T.Helper()
@@ -84,6 +99,21 @@ func (mr *MockOrderRepoMockRecorder) GetCartItemByProductID(arg0, arg1, arg2 any
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetCartItemByProductID", reflect.TypeOf((*MockOrderRepo)(nil).GetCartItemByProductID), arg0, arg1, arg2)
 }
 
+// GetOrderByID mocks base method.
+func (m *MockOrderRepo) GetOrderByID(arg0 context.Context, arg1 int32) (*model.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "GetOrderByID", arg0, arg1)
+	ret0, _ := ret[0].(*model.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// GetOrderByID indicates an expected call of GetOrderByID.
+func (mr *MockOrderRepoMockRecorder) GetOrderByID(arg0, arg1 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "GetOrderByID", reflect.TypeOf((*MockOrderRepo)(nil).GetOrderByID), arg0, arg1)
+}
+
 // ListCartItems mocks base method.
 func (m *MockOrderRepo) ListCartItems(arg0 context.Context, arg1 int32) ([]*model.CartItem, error) {
 	m.ctrl.T.Helper()
@@ -97,6 +127,21 @@ func (m *MockOrderRepo) ListCartItems(arg0 context.Context, arg1 int32) ([]*mode
 func (mr *MockOrderRepoMockRecorder) ListCartItems(arg0, arg1 any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListCartItems", reflect.TypeOf((*MockOrderRepo)(nil).ListCartItems), arg0, arg1)
+}
+
+// ListOrders mocks base method.
+func (m *MockOrderRepo) ListOrders(arg0 context.Context, arg1, arg2, arg3 int32) ([]*model.Order, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOrders", arg0, arg1, arg2, arg3)
+	ret0, _ := ret[0].([]*model.Order)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOrders indicates an expected call of ListOrders.
+func (mr *MockOrderRepoMockRecorder) ListOrders(arg0, arg1, arg2, arg3 any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOrders", reflect.TypeOf((*MockOrderRepo)(nil).ListOrders), arg0, arg1, arg2, arg3)
 }
 
 // UpsertCartItem mocks base method.

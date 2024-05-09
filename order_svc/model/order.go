@@ -27,6 +27,8 @@ type Order struct {
 	Note            string    `gorm:"type:varchar(255)" json:"note"`
 	Timestamps
 	SoftDelete
+
+	Items []*OrderItem // one-to-many relationship
 }
 
 type OrderItem struct {
