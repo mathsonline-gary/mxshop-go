@@ -114,7 +114,6 @@ message GetOrderResponse {
 }
 
 message UpdateOrderStatusRequest {
-  int32 id = 1;
-  string serial_number = 2;
-  string status = 3;
+  string serial_number = 1;
+  string status = 2;
 }
