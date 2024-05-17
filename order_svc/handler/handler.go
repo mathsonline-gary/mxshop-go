@@ -1,17 +1,30 @@
 package handler
 
 import (
-	"github.com/zycgary/mxshop-go/order_svc/data"
+	"github.com/zycgary/mxshop-go/order_svc/model"
 	"github.com/zycgary/mxshop-go/order_svc/proto"
 )
 
-var _ proto.OrderServiceServer = (*OrderServiceServer)(nil)
+var _ proto.OrderServiceServer = (*orderServiceServer)(nil)
 
-type OrderServiceServer struct {
+type Option func(*orderServiceServer)
+
+type orderServiceServer struct {
 	proto.UnimplementedOrderServiceServer
-	orderRepo data.OrderRepo
+
+	repo model.OrderRepo
 }
 
-func NewOrderServiceServer(orderRepo data.OrderRepo) *OrderServiceServer {
-	return &OrderServiceServer{orderRepo: orderRepo}
+func NewOrderServiceServer(opts ...Option) proto.OrderServiceServer {
+	s := &orderServiceServer{}
+	for _, opt := range opts {
+		opt(s)
+	}
+	return s
+}
+
+func WithRepo(repo model.OrderRepo) Option {
+	return func(o *orderServiceServer) {
+		o.repo = repo
+	}
 }

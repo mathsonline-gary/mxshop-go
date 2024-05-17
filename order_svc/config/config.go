@@ -1,14 +1,12 @@
 package config
 
-type Config struct {
-	App    App    `mapstructure:"app" json:"app"`
-	Log    Log    `mapstructure:"log" json:"log"`
-	DB     DB     `mapstructure:"db" json:"db"`
-	SD     SD     `mapstructure:"sd" json:"sd"`
-	DC     DC     `mapstructure:"dc" json:"dc"`
-	Consul Consul `mapstructure:"consul" json:"consul"`
-	Nacos  Nacos  `mapstructure:"nacos" json:"nacos"`
-}
+import (
+	"fmt"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/config_client"
+	"github.com/spf13/viper"
+)
 
 type App struct {
 	Name  string `mapstructure:"name" json:"name"`
@@ -30,6 +28,7 @@ type DB struct {
 	Username        string `mapstructure:"username" json:"username"`
 	Password        string `mapstructure:"password" json:"password"`
 	ForwardPassword string `mapstructure:"forward_password" json:"forward_password"`
+	LogLevel        string
 }
 
 type SD struct {
@@ -69,4 +68,46 @@ type Nacos struct {
 		DataID    string `mapstructure:"data_id"`
 		Group     string `mapstructure:"group"`
 	} `mapstructure:"client"`
+	ConfigClient config_client.IConfigClient
+}
+
+type Config struct {
+	App    App    `mapstructure:"app" json:"app"`
+	Log    Log    `mapstructure:"log" json:"log"`
+	DB     DB     `mapstructure:"db" json:"db"`
+	SD     SD     `mapstructure:"sd" json:"sd"`
+	DC     DC     `mapstructure:"dc" json:"dc"`
+	Consul Consul `mapstructure:"consul" json:"consul"`
+	Nacos  Nacos  `mapstructure:"nacos" json:"nacos"`
+}
+
+func (c *Config) Load(filePath, filename, fileType string) error {
+	fmt.Println("configurations initializing...")
+
+	viper.SetConfigName(filename)
+	viper.SetConfigType(fileType)
+	viper.AddConfigPath(filePath)
+
+	if err := viper.ReadInConfig(); err != nil {
+		return err
+	}
+
+	if err := viper.Unmarshal(c); err != nil {
+		return err
+	}
+
+	fmt.Println("configurations initialized!")
+
+	return nil
+}
+
+func (c *Config) Watch() {
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Println("Config file changed:", e.Name)
+		if err := viper.Unmarshal(c); err != nil {
+			fmt.Println("failed to update config:", err)
+		}
+		fmt.Printf("%+v\n", c)
+	})
+	viper.WatchConfig()
 }

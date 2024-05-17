@@ -8,12 +8,15 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	"time"
 
+	"github.com/zycgary/mxshop-go/order_svc/config"
 	"github.com/zycgary/mxshop-go/order_svc/data"
 	"github.com/zycgary/mxshop-go/order_svc/global"
 	"github.com/zycgary/mxshop-go/order_svc/handler"
 	"github.com/zycgary/mxshop-go/order_svc/initialize"
 	orderproto "github.com/zycgary/mxshop-go/order_svc/proto"
+	"gorm.io/gorm/logger"
 
 	consulAPI "github.com/hashicorp/consul/api"
 	"github.com/hashicorp/go-uuid"
@@ -26,6 +29,7 @@ import (
 func main() {
 	initialize.Init()
 	var (
+		env  = flag.String("env", "local", "The running environment of the service")
 		ip   = flag.String("ip", global.Config.App.Host, "The user service IP")
 		port = flag.Int("port", int(global.Config.App.Port), "The user service port")
 	)
@@ -35,9 +39,35 @@ func main() {
 		log.Fatalf("failed to listen: %v", err)
 	}
 
+	// Initialize config
+	var conf config.Config
+	if err := conf.Load("config/order", fmt.Sprintf("grpc.%s", *env), "yaml"); err != nil {
+		panic(err)
+	}
+	conf.Watch()
+
+	// Initialize DB
+	logLevel := logger.Silent
+	if conf.App.Debug {
+		logLevel = logger.Info
+	}
+	dbLogger := logger.New(
+		log.New(os.Stdout, "\r\n", log.LstdFlags), // io writer
+		logger.Config{
+			SlowThreshold: time.Second, // Slow SQL threshold
+			LogLevel:      logLevel,    // Log level
+		},
+	)
+	db := data.NewGormDB(conf.DB, dbLogger)
+
+	// Initialize order service
+	orderRepo := data.NewOrderRepo(db)
+	orderServiceServer := handler.NewOrderServiceServer(
+		handler.WithRepo(orderRepo),
+	)
+
 	s := grpc.NewServer()
-	orderRepo := data.NewOrderRepo(global.DB)
-	orderproto.RegisterOrderServiceServer(s, handler.NewOrderServiceServer(orderRepo))
+	orderproto.RegisterOrderServiceServer(s, orderServiceServer)
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
 
 	client, serviceID, err := registerConsulService(*ip, *port)

@@ -1,6 +1,9 @@
 package model
 
-import "time"
+import (
+	"context"
+	"time"
+)
 
 type CartItem struct {
 	IncrementID
@@ -42,4 +45,16 @@ type OrderItem struct {
 	Quantity          int32   `gorm:"type:int" json:"quantity"`
 	Timestamps
 	SoftDelete
+}
+
+type OrderRepo interface {
+	ListCartItems(context.Context, int32) ([]*CartItem, error)
+	GetCartItemByProductID(context.Context, int32, int32) (*CartItem, error)
+	GetCartItemByID(context.Context, int32) (*CartItem, error)
+	UpsertCartItem(context.Context, *CartItem) error
+	DeleteCartItem(context.Context, int32) error
+	CountOrders(context.Context, int32) (int64, error)
+	ListOrders(context.Context, int32, int32, int32) ([]*Order, error)
+	GetOrderByID(context.Context, int32) (*Order, error)
+	UpdateOrderStatus(context.Context, string, string) error
 }

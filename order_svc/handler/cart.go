@@ -11,13 +11,13 @@ import (
 )
 
 // ListCartItems retrieves the list of shopping cart items for a user.
-func (s *OrderServiceServer) ListCartItems(ctx context.Context, request *proto.ListCartItemsRequest) (*proto.ListCartItemsResponse, error) {
+func (s *orderServiceServer) ListCartItems(ctx context.Context, request *proto.ListCartItemsRequest) (*proto.ListCartItemsResponse, error) {
 	uid := request.UserId
 	if uid <= 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid user ID")
 	}
 
-	items, err := s.orderRepo.ListCartItems(ctx, uid)
+	items, err := s.repo.ListCartItems(ctx, uid)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to list cart items")
 	}
@@ -41,8 +41,8 @@ func (s *OrderServiceServer) ListCartItems(ctx context.Context, request *proto.L
 
 // AddCartItem adds given product(s) to the user's shopping cart.
 // If the product already exists in the cart, it will increase the quantity.
-func (s *OrderServiceServer) AddCartItem(ctx context.Context, request *proto.AddCartItemRequest) (*proto.AddCartItemResponse, error) {
-	item, err := s.orderRepo.GetCartItemByProductID(ctx, request.UserId, request.ProductId)
+func (s *orderServiceServer) AddCartItem(ctx context.Context, request *proto.AddCartItemRequest) (*proto.AddCartItemResponse, error) {
+	item, err := s.repo.GetCartItemByProductID(ctx, request.UserId, request.ProductId)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "failed to add cart item.")
 	}
@@ -59,7 +59,7 @@ func (s *OrderServiceServer) AddCartItem(ctx context.Context, request *proto.Add
 		}
 	}
 
-	if err := s.orderRepo.UpsertCartItem(ctx, item); err != nil {
+	if err := s.repo.UpsertCartItem(ctx, item); err != nil {
 		return nil, err
 	}
 
@@ -76,7 +76,7 @@ func (s *OrderServiceServer) AddCartItem(ctx context.Context, request *proto.Add
 
 // UpdateCartItem updates a user's shopping cart item.
 // It will update the quantity and selected status of the cart item
-func (s *OrderServiceServer) UpdateCartItem(ctx context.Context, request *proto.UpdateCartItemRequest) (*emptypb.Empty, error) {
+func (s *orderServiceServer) UpdateCartItem(ctx context.Context, request *proto.UpdateCartItemRequest) (*emptypb.Empty, error) {
 	// Validate the request
 	if request.Id <= 0 {
 		return nil, status.Errorf(codes.InvalidArgument, "invalid cart item ID")
@@ -86,7 +86,7 @@ func (s *OrderServiceServer) UpdateCartItem(ctx context.Context, request *proto.
 	}
 
 	// Get the cart item
-	item, err := s.orderRepo.GetCartItemByID(ctx, request.Id)
+	item, err := s.repo.GetCartItemByID(ctx, request.Id)
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "internal error")
 	}
@@ -97,7 +97,7 @@ func (s *OrderServiceServer) UpdateCartItem(ctx context.Context, request *proto.
 	// Update the quantity
 	item.Quantity = request.Quantity
 	item.Selected = request.Selected
-	if err := s.orderRepo.UpsertCartItem(ctx, item); err != nil {
+	if err := s.repo.UpsertCartItem(ctx, item); err != nil {
 		return nil, status.Errorf(codes.Internal, "internal error")
 	}
 
@@ -105,8 +105,8 @@ func (s *OrderServiceServer) UpdateCartItem(ctx context.Context, request *proto.
 }
 
 // DeleteCartItem deletes a cart item from the user's shopping cart.
-func (s *OrderServiceServer) DeleteCartItem(ctx context.Context, request *proto.DeleteCartItemRequest) (*emptypb.Empty, error) {
-	if err := s.orderRepo.DeleteCartItem(ctx, request.Id); err != nil {
+func (s *orderServiceServer) DeleteCartItem(ctx context.Context, request *proto.DeleteCartItemRequest) (*emptypb.Empty, error) {
+	if err := s.repo.DeleteCartItem(ctx, request.Id); err != nil {
 		return nil, status.Errorf(codes.Internal, "internal error")
 	}
 

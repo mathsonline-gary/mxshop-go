@@ -9,25 +9,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var _ OrderRepo = (*orderRepo)(nil)
-
-type OrderRepo interface {
-	ListCartItems(context.Context, int32) ([]*model.CartItem, error)
-	GetCartItemByProductID(context.Context, int32, int32) (*model.CartItem, error)
-	GetCartItemByID(context.Context, int32) (*model.CartItem, error)
-	UpsertCartItem(context.Context, *model.CartItem) error
-	DeleteCartItem(context.Context, int32) error
-	CountOrders(context.Context, int32) (int64, error)
-	ListOrders(context.Context, int32, int32, int32) ([]*model.Order, error)
-	GetOrderByID(context.Context, int32) (*model.Order, error)
-	UpdateOrderStatus(context.Context, string, string) error
-}
+var _ model.OrderRepo = (*orderRepo)(nil)
 
 type orderRepo struct {
 	db *gorm.DB
 }
 
-func NewOrderRepo(db *gorm.DB) OrderRepo {
+func NewOrderRepo(db *gorm.DB) model.OrderRepo {
 	return &orderRepo{db: db}
 }
 

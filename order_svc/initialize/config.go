@@ -15,7 +15,7 @@ import (
 func initConfig() {
 	fmt.Println("configurations initializing...")
 
-	viper.SetConfigName("grpc")
+	viper.SetConfigName("grpc.local")
 	viper.SetConfigType("yaml")
 	viper.AddConfigPath("config/order")
 

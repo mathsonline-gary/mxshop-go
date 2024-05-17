@@ -10,9 +10,9 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (s *OrderServiceServer) CreateOrder(ctx context.Context, request *proto.CreateOrderRequest) (*proto.CreateOrderResponse, error) {
+func (s *orderServiceServer) CreateOrder(ctx context.Context, request *proto.CreateOrderRequest) (*proto.CreateOrderResponse, error) {
 	// get selected products from cart
-	items, err := s.orderRepo.ListCartItems(ctx, request.UserId)
+	items, err := s.repo.ListCartItems(ctx, request.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -32,13 +32,13 @@ func (s *OrderServiceServer) CreateOrder(ctx context.Context, request *proto.Cre
 }
 
 // ListOrders Retrieves a paginated list of orders for a user.
-func (s *OrderServiceServer) ListOrders(ctx context.Context, request *proto.ListOrdersRequest) (*proto.ListOrdersResponse, error) {
-	total, err := s.orderRepo.CountOrders(ctx, request.UserId)
+func (s *orderServiceServer) ListOrders(ctx context.Context, request *proto.ListOrdersRequest) (*proto.ListOrdersResponse, error) {
+	total, err := s.repo.CountOrders(ctx, request.UserId)
 	if err != nil {
 		return nil, status.Error(codes.Internal, proto.ErrorInternal)
 	}
 
-	orders, err := s.orderRepo.ListOrders(ctx, request.UserId, request.Page, request.PageSize)
+	orders, err := s.repo.ListOrders(ctx, request.UserId, request.Page, request.PageSize)
 	if err != nil {
 		return nil, status.Error(codes.Internal, proto.ErrorInternal)
 	}
@@ -68,8 +68,8 @@ func (s *OrderServiceServer) ListOrders(ctx context.Context, request *proto.List
 	return rsp, nil
 }
 
-func (s *OrderServiceServer) GetOrder(ctx context.Context, request *proto.GetOrderRequest) (*proto.GetOrderResponse, error) {
-	order, err := s.orderRepo.GetOrderByID(ctx, request.Id)
+func (s *orderServiceServer) GetOrder(ctx context.Context, request *proto.GetOrderRequest) (*proto.GetOrderResponse, error) {
+	order, err := s.repo.GetOrderByID(ctx, request.Id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, proto.ErrorInternal)
 	}
@@ -111,8 +111,8 @@ func (s *OrderServiceServer) GetOrder(ctx context.Context, request *proto.GetOrd
 }
 
 // UpdateOrderStatus Updates the status of an order by its serial number.
-func (s *OrderServiceServer) UpdateOrderStatus(ctx context.Context, request *proto.UpdateOrderStatusRequest) (*emptypb.Empty, error) {
-	err := s.orderRepo.UpdateOrderStatus(ctx, request.SerialNumber, request.Status)
+func (s *orderServiceServer) UpdateOrderStatus(ctx context.Context, request *proto.UpdateOrderStatusRequest) (*emptypb.Empty, error) {
+	err := s.repo.UpdateOrderStatus(ctx, request.SerialNumber, request.Status)
 	if err != nil {
 		if err.Error() == proto.ErrorOrderNotFound {
 			return nil, status.Error(codes.NotFound, proto.ErrorOrderNotFound)

@@ -20,7 +20,7 @@ db:
 
 # Service discovery
 sd:
-  driver: 'local' # local, consul
+  driver: 'consul' # local, consul, nacos
 
 # Dynamic configuration
 dc:
