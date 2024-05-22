@@ -5,18 +5,18 @@ import (
 	"github.com/zycgary/mxshop-go/order_svc/proto"
 )
 
-var _ proto.OrderServiceServer = (*orderServiceServer)(nil)
+var _ proto.OrderServiceServer = (*OrderService)(nil)
 
-type Option func(*orderServiceServer)
+type Option func(*OrderService)
 
-type orderServiceServer struct {
+type OrderService struct {
 	proto.UnimplementedOrderServiceServer
 
 	repo model.OrderRepo
 }
 
-func NewOrderServiceServer(opts ...Option) proto.OrderServiceServer {
-	s := &orderServiceServer{}
+func NewOrderService(opts ...Option) *OrderService {
+	s := &OrderService{}
 	for _, opt := range opts {
 		opt(s)
 	}
@@ -24,7 +24,7 @@ func NewOrderServiceServer(opts ...Option) proto.OrderServiceServer {
 }
 
 func WithRepo(repo model.OrderRepo) Option {
-	return func(o *orderServiceServer) {
+	return func(o *OrderService) {
 		o.repo = repo
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/zycgary/mxshop-go/order_svc/global"
-
 	"go.uber.org/zap"
 )
 

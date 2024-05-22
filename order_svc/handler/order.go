@@ -10,7 +10,7 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
-func (s *orderServiceServer) CreateOrder(ctx context.Context, request *proto.CreateOrderRequest) (*proto.CreateOrderResponse, error) {
+func (s *OrderService) CreateOrder(ctx context.Context, request *proto.CreateOrderRequest) (*proto.CreateOrderResponse, error) {
 	// get selected products from cart
 	items, err := s.repo.ListCartItems(ctx, request.UserId)
 	if err != nil {
@@ -32,7 +32,7 @@ func (s *orderServiceServer) CreateOrder(ctx context.Context, request *proto.Cre
 }
 
 // ListOrders Retrieves a paginated list of orders for a user.
-func (s *orderServiceServer) ListOrders(ctx context.Context, request *proto.ListOrdersRequest) (*proto.ListOrdersResponse, error) {
+func (s *OrderService) ListOrders(ctx context.Context, request *proto.ListOrdersRequest) (*proto.ListOrdersResponse, error) {
 	total, err := s.repo.CountOrders(ctx, request.UserId)
 	if err != nil {
 		return nil, status.Error(codes.Internal, proto.ErrorInternal)
@@ -68,7 +68,7 @@ func (s *orderServiceServer) ListOrders(ctx context.Context, request *proto.List
 	return rsp, nil
 }
 
-func (s *orderServiceServer) GetOrder(ctx context.Context, request *proto.GetOrderRequest) (*proto.GetOrderResponse, error) {
+func (s *OrderService) GetOrder(ctx context.Context, request *proto.GetOrderRequest) (*proto.GetOrderResponse, error) {
 	order, err := s.repo.GetOrderByID(ctx, request.Id)
 	if err != nil {
 		return nil, status.Error(codes.Internal, proto.ErrorInternal)
@@ -111,7 +111,7 @@ func (s *orderServiceServer) GetOrder(ctx context.Context, request *proto.GetOrd
 }
 
 // UpdateOrderStatus Updates the status of an order by its serial number.
-func (s *orderServiceServer) UpdateOrderStatus(ctx context.Context, request *proto.UpdateOrderStatusRequest) (*emptypb.Empty, error) {
+func (s *OrderService) UpdateOrderStatus(ctx context.Context, request *proto.UpdateOrderStatusRequest) (*emptypb.Empty, error) {
 	err := s.repo.UpdateOrderStatus(ctx, request.SerialNumber, request.Status)
 	if err != nil {
 		if err.Error() == proto.ErrorOrderNotFound {

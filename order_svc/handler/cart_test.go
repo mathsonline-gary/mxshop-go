@@ -91,7 +91,7 @@ func TestOrderServiceServer_ListCartItems(t *testing.T) {
 			ctrl := gomock.NewController(t)
 			defer ctrl.Finish()
 			m := mock.NewMockOrderRepo(ctrl)
-			server := NewOrderServiceServer(WithRepo(m))
+			server := NewOrderService(WithRepo(m))
 
 			tt.expects(m)
 			got, err := server.ListCartItems(tt.args.ctx, tt.args.request)
