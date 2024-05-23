@@ -4,6 +4,7 @@ package log
 type Logger interface {
 	Log(level Level, keyvals ...interface{}) error
 	Level() Level
+	Close() error
 }
 
 func New(opt *Option) Logger {

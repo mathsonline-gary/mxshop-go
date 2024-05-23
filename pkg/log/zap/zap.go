@@ -66,10 +66,6 @@ func (l *Logger) Level() log.Level {
 	}
 }
 
-func (l *Logger) Sync() error {
-	return l.logger.Sync()
-}
-
 func (l *Logger) Close() error {
-	return l.Sync()
+	return l.logger.Sync()
 }
