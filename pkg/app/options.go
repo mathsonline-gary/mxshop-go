@@ -4,8 +4,10 @@ import (
 	"context"
 	"net/url"
 	"os"
+	"time"
 
 	"github.com/zycgary/mxshop-go/pkg/log"
+	"github.com/zycgary/mxshop-go/pkg/registry"
 	"google.golang.org/grpc"
 )
 
@@ -14,6 +16,8 @@ type Option func(o *options)
 type options struct {
 	id       string
 	name     string
+	tags     []string
+	metadata map[string]string
 	endpoint *url.URL
 
 	ctx     context.Context
@@ -21,6 +25,9 @@ type options struct {
 
 	logger     log.Logger
 	grpcServer *grpc.Server
+
+	registrar        registry.Registrar
+	registrarTimeout time.Duration
 
 	// Before and After funcs
 	beforeStart []func(context.Context) error
@@ -40,6 +47,20 @@ func WithID(id string) Option {
 func WithName(name string) Option {
 	return func(o *options) {
 		o.name = name
+	}
+}
+
+// WithTags sets the app service tags.
+func WithTags(tags ...string) Option {
+	return func(o *options) {
+		o.tags = tags
+	}
+}
+
+// WithMetadata sets the app service metadata.
+func WithMetadata(md map[string]string) Option {
+	return func(o *options) {
+		o.metadata = md
 	}
 }
 
@@ -75,6 +96,20 @@ func WithLogger(logger log.Logger) Option {
 func WithGRPCServer(s *grpc.Server) Option {
 	return func(o *options) {
 		o.grpcServer = s
+	}
+}
+
+// WithRegistrar sets the app registrar.
+func WithRegistrar(r registry.Registrar) Option {
+	return func(o *options) {
+		o.registrar = r
+	}
+}
+
+// WithRegistrarTimeout sets the app registrar timeout.
+func WithRegistrarTimeout(t time.Duration) Option {
+	return func(o *options) {
+		o.registrarTimeout = t
 	}
 }
 

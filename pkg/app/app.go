@@ -9,21 +9,26 @@ import (
 	"os/signal"
 	"sync"
 	"syscall"
+	"time"
 
 	"github.com/google/uuid"
+	"github.com/zycgary/mxshop-go/pkg/registry"
 	"golang.org/x/sync/errgroup"
 )
 
 type App struct {
-	opts   options
-	ctx    context.Context
-	cancel context.CancelFunc
+	opts     options
+	ctx      context.Context
+	cancel   context.CancelFunc
+	mu       sync.Mutex
+	instance *registry.Instance
 }
 
 func New(opts ...Option) *App {
 	o := options{
-		ctx:     context.Background(),
-		signals: []os.Signal{syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT},
+		ctx:              context.Background(),
+		signals:          []os.Signal{syscall.SIGTERM, syscall.SIGQUIT, syscall.SIGINT},
+		registrarTimeout: 10 * time.Second,
 	}
 
 	// generate default id
@@ -50,6 +55,15 @@ func New(opts ...Option) *App {
 // - stop server(s) when error occurs
 // - stop the app gracefully when stop signal received
 func (a *App) Run() error {
+	// Build instance.
+	instance, err := a.buildInstance()
+	if err != nil {
+		return err
+	}
+	a.mu.Lock()
+	a.instance = instance
+	a.mu.Unlock()
+
 	for _, fn := range a.opts.beforeStart {
 		if err := fn(a.ctx); err != nil {
 			return err
@@ -82,8 +96,13 @@ func (a *App) Run() error {
 	})
 	wg.Wait() // wait for server to start
 
-	// TODO: register service to consul
-	// ...
+	if a.opts.registrar != nil {
+		rctx, rcancel := context.WithTimeout(a.ctx, a.opts.registrarTimeout)
+		defer rcancel()
+		if err = a.opts.registrar.Register(rctx, instance); err != nil {
+			return err
+		}
+	}
 
 	for _, fn := range a.opts.afterStart {
 		if err = fn(a.ctx); err != nil {
@@ -118,8 +137,17 @@ func (a *App) Run() error {
 
 // Stop stops the app gracefully.
 func (a *App) Stop() error {
-	// TODO: deregister service from consul
-	// ...
+	// Deregister service from consul.
+	a.mu.Lock()
+	instance := a.instance
+	a.mu.Unlock()
+	if a.opts.registrar != nil && instance != nil {
+		ctx, cancel := context.WithTimeout(a.ctx, a.opts.registrarTimeout)
+		defer cancel()
+		if err := a.opts.registrar.Deregister(ctx, instance); err != nil {
+			return err
+		}
+	}
 
 	// Close logger.
 	if a.opts.logger != nil {
@@ -130,4 +158,14 @@ func (a *App) Stop() error {
 		a.cancel()
 	}
 	return nil
+}
+
+func (a *App) buildInstance() (*registry.Instance, error) {
+	return &registry.Instance{
+		ID:        a.opts.id,
+		Name:      a.opts.name,
+		Tags:      a.opts.tags,
+		Metadata:  a.opts.metadata,
+		Endpoints: []string{a.opts.endpoint.String()},
+	}, nil
 }

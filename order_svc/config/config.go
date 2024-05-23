@@ -75,15 +75,13 @@ type Config struct {
 	App    App    `mapstructure:"app" json:"app"`
 	Log    Log    `mapstructure:"log" json:"log"`
 	DB     DB     `mapstructure:"db" json:"db"`
-	SD     SD     `mapstructure:"sd" json:"sd"`
+	SD     SD     `mapstructure:"registry" json:"registry"`
 	DC     DC     `mapstructure:"dc" json:"dc"`
 	Consul Consul `mapstructure:"consul" json:"consul"`
 	Nacos  Nacos  `mapstructure:"nacos" json:"nacos"`
 }
 
 func (c *Config) Load(filePath, filename, fileType string) error {
-	fmt.Println("configurations initializing...")
-
 	viper.SetConfigName(filename)
 	viper.SetConfigType(fileType)
 	viper.AddConfigPath(filePath)
@@ -95,8 +93,6 @@ func (c *Config) Load(filePath, filename, fileType string) error {
 	if err := viper.Unmarshal(c); err != nil {
 		return err
 	}
-
-	fmt.Println("configurations initialized!")
 
 	return nil
 }
