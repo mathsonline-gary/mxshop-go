@@ -1,5 +1,12 @@
 package config
 
+import (
+	"fmt"
+
+	"github.com/fsnotify/fsnotify"
+	"github.com/spf13/viper"
+)
+
 type NacosServerConfig struct {
 	Host string `mapstructure:"host"`
 	Port uint64 `mapstructure:"port"`
@@ -49,4 +56,31 @@ type Config struct {
 	DBConfig     DBConfig     `mapstructure:"db" json:"db"`
 	AppConfig    AppConfig    `mapstructure:"app" json:"app"`
 	ConsulConfig ConsulConfig `mapstructure:"consul" json:"consul"`
+}
+
+func (c *Config) Load(filePath, filename, fileType string) error {
+	viper.SetConfigName(filename)
+	viper.SetConfigType(fileType)
+	viper.AddConfigPath(filePath)
+
+	if err := viper.ReadInConfig(); err != nil {
+		return err
+	}
+
+	if err := viper.Unmarshal(c); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c *Config) Watch() {
+	viper.OnConfigChange(func(e fsnotify.Event) {
+		fmt.Println("Config file changed:", e.Name)
+		if err := viper.Unmarshal(c); err != nil {
+			fmt.Println("failed to update config:", err)
+		}
+		fmt.Printf("%+v\n", c)
+	})
+	viper.WatchConfig()
 }

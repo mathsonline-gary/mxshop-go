@@ -1,24 +1,21 @@
-package user_controller
+package v1
 
 import (
 	"context"
+
 	upb "github.com/zycgary/mxshop-go/api/user/v1"
-	usvc "github.com/zycgary/mxshop-go/app/user/svc/service/v1"
 )
 
-type userController struct {
-	upb.UnimplementedUserServiceServer
-	us usvc.UserService
-}
-
-var _ upb.UserServiceServer = (*userController)(nil)
-
 func (uc *userController) GetUserList(ctx context.Context, req *upb.GetUserListRequest) (*upb.UserListResponse, error) {
-	opts := usvc.ListMeta{
-		Page:     int(req.Page),
-		PageSize: int(req.PageSize),
+	var page, pageSize int32 = 1, 10
+	if req.Page > 0 {
+		page = int32(req.Page)
 	}
-	dtoList, err := uc.us.Index(ctx, opts)
+	if req.PageSize > 0 && req.PageSize <= 100 {
+		pageSize = int32(req.PageSize)
+	}
+
+	dtoList, err := uc.us.GetList(ctx, page, pageSize)
 	if err != nil {
 		return nil, err
 	}

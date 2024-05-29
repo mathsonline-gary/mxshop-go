@@ -9,18 +9,18 @@ import (
 	"github.com/zycgary/mxshop-go/pkg/registry"
 )
 
-var _ registry.Registrar = (*Registry)(nil)
+var _ registry.Registrar = (*registrar)(nil)
 
-type Option func(registrar *Registry)
+type Option func(registrar *registrar)
 
-type Registry struct {
+type registrar struct {
 	cli    *api.Client
 	checks api.AgentServiceChecks
 }
 
-func New(client *api.Client, opts ...Option) *Registry {
+func New(client *api.Client, opts ...Option) registry.Registrar {
 	chs := make(api.AgentServiceChecks, 0, 1)
-	r := &Registry{
+	r := &registrar{
 		cli:    client,
 		checks: chs,
 	}
@@ -33,12 +33,12 @@ func New(client *api.Client, opts ...Option) *Registry {
 }
 
 func WithCheck(check *api.AgentServiceCheck) Option {
-	return func(r *Registry) {
+	return func(r *registrar) {
 		r.checks = append(r.checks, check)
 	}
 }
 
-func (r Registry) Register(_ context.Context, instance *registry.Instance) error {
+func (r registrar) Register(_ context.Context, instance *registry.Instance) error {
 	addresses := make(map[string]api.ServiceAddress, len(instance.Endpoints))
 	for _, endpoint := range instance.Endpoints {
 		raw, err := url.Parse(endpoint)
@@ -68,6 +68,6 @@ func (r Registry) Register(_ context.Context, instance *registry.Instance) error
 	return nil
 }
 
-func (r Registry) Deregister(_ context.Context, instance *registry.Instance) error {
+func (r registrar) Deregister(_ context.Context, instance *registry.Instance) error {
 	return r.cli.Agent().ServiceDeregister(instance.ID)
 }

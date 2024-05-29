@@ -39,10 +39,6 @@ func newApp(conf config.Config) (*app.App, error) {
 	}
 	logger := zaplog.NewLogger(l)
 
-	defer func(logger *zaplog.Logger) {
-		_ = logger.Close()
-	}(logger)
-
 	// Initialize DB.
 	db, _ := data.NewGormDB(conf.DB, logger)
 

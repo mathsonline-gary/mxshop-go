@@ -72,7 +72,7 @@ func registerConsulService(addr string, port int) (client *consulAPI.Client, ser
 	registration := &consulAPI.AgentServiceRegistration{
 		Name:    global.Config.AppConfig.Name,
 		ID:      serviceID,
-		Tags:    []string{"mxshop", "stock", "svc"},
+		Tags:    []string{"mxshop", "stock", "grpc"},
 		Address: addr,
 		Port:    port,
 		Check: &consulAPI.AgentServiceCheck{
