@@ -1,21 +1,24 @@
-package mock
+package v1
 
 import (
 	"context"
 
-	usv1 "github.com/zycgary/mxshop-go/internal/user/grpc/service/user/v1"
+	usv1 "github.com/zycgary/mxshop-go/internal/user/grpc/service/v1"
+	"github.com/zycgary/mxshop-go/pkg/log"
 	"gorm.io/gorm"
 )
 
 var _ usv1.UserRepository = (*userRepository)(nil)
 
 type userRepository struct {
-	db *gorm.DB
+	db     *gorm.DB
+	logger *log.Sugar
 }
 
-func NewUserRepository(db *gorm.DB) usv1.UserRepository {
+func NewUserRepository(db *gorm.DB, logger log.Logger) usv1.UserRepository {
 	return &userRepository{
-		db: db,
+		db:     db,
+		logger: log.NewSugar(logger),
 	}
 }
 

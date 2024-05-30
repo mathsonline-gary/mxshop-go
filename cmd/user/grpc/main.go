@@ -2,22 +2,25 @@ package main
 
 import (
 	"flag"
-	"fmt"
 
 	svc "github.com/zycgary/mxshop-go/internal/user/grpc"
 	"github.com/zycgary/mxshop-go/internal/user/grpc/config"
 )
 
 var (
-	env = flag.String("env", "local", "The running environment of the service")
+	flagConfig string
 )
+
+func init() {
+	flag.StringVar(&flagConfig, "config", "config/user/grpc/config.yaml", "config path, eg: -conf config.yaml")
+}
 
 func main() {
 	flag.Parse()
 
 	// Load config.
 	var conf config.Config
-	if err := conf.Load("config/user", fmt.Sprintf("grpc.%s", *env), "yaml"); err != nil {
+	if err := conf.Load(flagConfig); err != nil {
 		panic(err)
 	}
 
