@@ -19,7 +19,7 @@ func InitUserSvcClient() {
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
 	if err != nil {
-		zap.S().Fatal("connect to [user grpc service] failed")
+		zap.S().Fatal("connect to [user v1 service] failed")
 	}
 
 	global.UserSvcClient = proto.NewUserServiceClient(conn)

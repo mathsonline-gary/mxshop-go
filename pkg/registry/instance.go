@@ -15,7 +15,7 @@ type Instance struct {
 	// Endpoints are endpoint addresses of the service instance.
 	// schema:
 	//   http://127.0.0.1:8000?isSecure=false
-	//   grpc://127.0.0.1:9000?isSecure=false
+	//   v1://127.0.0.1:9000?isSecure=false
 	Endpoints []string `json:"endpoints"`
 }
 

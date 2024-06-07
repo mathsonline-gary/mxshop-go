@@ -31,7 +31,7 @@ func main() {
 	r := gin.Default()
 	initialize.Router(r)
 
-	// Init user grpc service
+	// Init user v1 service
 	initialize.InitUserSvcClient()
 
 	// Start app

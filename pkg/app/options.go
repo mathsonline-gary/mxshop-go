@@ -8,7 +8,7 @@ import (
 
 	"github.com/zycgary/mxshop-go/pkg/log"
 	"github.com/zycgary/mxshop-go/pkg/registry"
-	"google.golang.org/grpc"
+	"github.com/zycgary/mxshop-go/pkg/transport"
 )
 
 type Option func(o *options)
@@ -23,8 +23,10 @@ type options struct {
 	ctx     context.Context
 	signals []os.Signal
 
-	logger     log.Logger
-	grpcServer *grpc.Server
+	logger log.Logger
+
+	servers     []transport.Server
+	stopTimeout time.Duration
 
 	registrar        registry.Registrar
 	registrarTimeout time.Duration
@@ -92,10 +94,10 @@ func WithLogger(logger log.Logger) Option {
 	}
 }
 
-// WithGRPCServer sets the app grpc server.
-func WithGRPCServer(s *grpc.Server) Option {
+// WithServers sets the app servers.
+func WithServers(srv ...transport.Server) Option {
 	return func(o *options) {
-		o.grpcServer = s
+		o.servers = srv
 	}
 }
 

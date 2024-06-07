@@ -1,26 +1,19 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"net/url"
 
 	consulapi "github.com/hashicorp/consul/api"
-	"github.com/zycgary/mxshop-go/order_svc/config"
-	"github.com/zycgary/mxshop-go/order_svc/data"
-	"github.com/zycgary/mxshop-go/order_svc/handler"
-	orderproto "github.com/zycgary/mxshop-go/order_svc/proto"
+	"github.com/zycgary/mxshop-go/app/user/service/v1/internal/config"
+	"github.com/zycgary/mxshop-go/app/user/service/v1/internal/data"
+	"github.com/zycgary/mxshop-go/app/user/service/v1/internal/logic"
+	"github.com/zycgary/mxshop-go/app/user/service/v1/internal/server"
+	"github.com/zycgary/mxshop-go/app/user/service/v1/internal/service"
 	"github.com/zycgary/mxshop-go/pkg/app"
 	zaplog "github.com/zycgary/mxshop-go/pkg/log/zap"
 	"github.com/zycgary/mxshop-go/pkg/registry/consul"
 	"go.uber.org/zap"
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/health"
-	"google.golang.org/grpc/health/grpc_health_v1"
-)
-
-var (
-	env = flag.String("env", "local", "The running environment of the service")
 )
 
 func newApp(conf config.Config) (*app.App, error) {
@@ -40,18 +33,13 @@ func newApp(conf config.Config) (*app.App, error) {
 	logger := zaplog.NewLogger(l)
 
 	// Initialize DB.
-	db, _ := data.NewGormDB(conf.DB, logger)
-
-	// Initialize order service.
-	orderRepo := data.NewOrderRepo(db)
-	orderService := handler.NewOrderService(
-		handler.WithRepo(orderRepo),
-	)
+	db, _ := data.NewDB(conf.DB, logger)
 
 	// Initialize GRPC server.
-	s := grpc.NewServer()
-	orderproto.RegisterOrderServiceServer(s, orderService)
-	grpc_health_v1.RegisterHealthServer(s, health.NewServer())
+	repo := data.NewUserRepository(db, logger)
+	uc := logic.NewUserUseCase(repo, logger)
+	svc := service.NewUserService(uc, logger)
+	s := server.NewGRPCServer(conf.Server, svc, logger)
 
 	// Initialize service registrar.
 	client, err := consulapi.NewClient(consulapi.DefaultConfig())
@@ -75,27 +63,7 @@ func newApp(conf config.Config) (*app.App, error) {
 		app.WithMetadata(map[string]string{}),
 		app.WithEndpoint(endpoint),
 		app.WithLogger(logger),
-		app.WithGRPCServer(s),
+		app.WithServers(s),
 		app.WithRegistrar(registrar),
 	), nil
-}
-
-func main() {
-	flag.Parse()
-
-	// Load config.
-	var conf config.Config
-	if err := conf.Load("config/order", fmt.Sprintf("v1.%s", *env), "yaml"); err != nil {
-		panic(err)
-	}
-
-	a, err := newApp(conf)
-	if err != nil {
-		panic(err)
-	}
-
-	// Start and wait for stop signal.
-	if err := a.Run(); err != nil {
-		panic(err)
-	}
 }

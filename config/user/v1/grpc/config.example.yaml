@@ -1,0 +1,31 @@
+app:
+  name: 'user_grpc_service'
+  host: 'localhost'
+  port: 50051
+  env: 'local'
+  debug: true
+
+# Database
+db:
+  connection: 'mysql'
+  host: 'localhost'
+  port: 3307
+  database: 'mxshop_user_svc'
+  username: 'root'
+  password: ''
+  forward_password: ''
+
+consul:
+  host: 'localhost'
+  port: 8500
+  service:
+    tags:
+      - 'mxshop'
+      - 'user'
+      - 'v1'
+    check:
+      protocol: 'v1'
+      endpoint: 'host.docker.internal'
+      interval: 10
+      timeout: 5
+      deregister_after: 1

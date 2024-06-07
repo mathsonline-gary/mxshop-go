@@ -40,7 +40,7 @@ func (s *Server) setEndpoint() error {
 
 		return err
 	}
-	s.endpoint = &url.URL{Scheme: "grpc", Host: addr}
+	s.endpoint = &url.URL{Scheme: "v1", Host: addr}
 
 	return nil
 }

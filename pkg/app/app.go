@@ -3,8 +3,6 @@ package app
 import (
 	"context"
 	"errors"
-	"log"
-	"net"
 	"os"
 	"os/signal"
 	"sync"
@@ -70,31 +68,27 @@ func (a *App) Run() error {
 		}
 	}
 
-	lis, err := net.Listen("tcp", a.opts.endpoint.String())
-	if err != nil {
-		return err
-	}
 	eg, ectx := errgroup.WithContext(a.ctx)
 	wg := sync.WaitGroup{}
-	wg.Add(1)
 
-	// stop server when App context done
-	eg.Go(func() error {
-		<-ectx.Done() // wait for errgroup cancel signal
-		a.opts.grpcServer.Stop()
-		return nil
-	})
+	for _, srv := range a.opts.servers {
+		srv := srv
+		// stop server when App context done
+		eg.Go(func() error {
+			<-ectx.Done() // wait for errgroup cancel signal
+			stopCtx, cancel := context.WithTimeout(a.opts.ctx, a.opts.stopTimeout)
+			defer cancel()
+			return srv.Stop(stopCtx)
+		})
+		wg.Add(1)
+		// Start server(s)
+		eg.Go(func() error {
+			wg.Done() // defer is not needed here, as it is to identify the server has begun to start before the registration, not to identify the server has started.
+			return srv.Start(a.opts.ctx)
+		})
+	}
 
-	// Start server(s)
-	eg.Go(func() error {
-		wg.Done() // defer is not needed here, as it is to identify the server has begun to start before the registration, not to identify the server has started.
-		log.Printf("server listening at %v", lis.Addr())
-		if err := a.opts.grpcServer.Serve(lis); err != nil {
-			return err
-		}
-		return nil
-	})
-	wg.Wait() // wait for server to start
+	wg.Wait() // wait for servers to start
 
 	if a.opts.registrar != nil {
 		rctx, rcancel := context.WithTimeout(a.ctx, a.opts.registrarTimeout)

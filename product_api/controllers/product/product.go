@@ -99,7 +99,7 @@ func Index(ctx *gin.Context) {
 	// Call gRPC service
 	products, err := global.ProductSvcClient.FilterProducts(context.Background(), &req)
 	if err != nil {
-		zap.S().Errorf("grpc service FilterProducts failed: %v", err)
+		zap.S().Errorf("v1 service FilterProducts failed: %v", err)
 		controllers.HandleGRPCError(ctx, err)
 		return
 	}

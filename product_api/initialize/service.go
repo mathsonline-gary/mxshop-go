@@ -19,7 +19,7 @@ func ProductSvcClient() {
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
 	if err != nil {
-		zap.S().Fatal("connect to [product grpc service] failed", err)
+		zap.S().Fatal("connect to [product v1 service] failed", err)
 	}
 
 	global.ProductSvcClient = proto.NewProductServiceClient(conn)
