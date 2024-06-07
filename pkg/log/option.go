@@ -6,7 +6,7 @@ import (
 	"github.com/spf13/pflag"
 )
 
-// Option is log option. It is used to initialize the logger. The values are parsed from the configuration file or command line arguments.
+// Option is log option. It is used to initialize the logger. The values are parsed from the configuration .go or command line arguments.
 type Option struct {
 	Level Level `json:"level" mapstructure:"level" toml:"level" yaml:"level"`
 }

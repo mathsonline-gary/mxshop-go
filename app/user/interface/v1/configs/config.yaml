@@ -1,0 +1,34 @@
+app:
+  env: 'local'
+  debug: true
+
+server:
+  http:
+    host: 'localhost'
+    port: 8080
+
+data:
+  user-service:
+    driver: 'consul'
+    host: 'localhost'
+    port: 8500
+    name: 'user_grpc_service_v1'
+
+registry:
+  driver: 'consul'
+  host: 'localhost'
+  port: 8500
+  schema: 'http'
+  name: 'user_http_interface_v1'
+  tags:
+    - 'mxshop'
+    - 'user'
+    - 'http'
+    - 'interface'
+    - 'v1'
+  check:
+    protocol: 'v1'
+    endpoint: 'host.docker.internal'
+    interval: 10
+    timeout: 5
+    deregister_after: 1

@@ -16,7 +16,7 @@ const (
 
 var enCases = cases.Title(language.AmericanEnglish, cases.NoLower)
 
-// GenerateFile generates a _errors.pb.go file containing custom errors definitions.
+// GenerateFile generates a _errors.pb.go .go containing custom errors definitions.
 func GenerateFile(gen *protogen.Plugin, file *protogen.File) *protogen.GeneratedFile {
 	if len(file.Enums) == 0 {
 		return nil
@@ -48,7 +48,7 @@ func generateFileContent(gen *protogen.Plugin, file *protogen.File, g *protogen.
 			index++
 		}
 	}
-	// If all enums do not contain 'errors.code', the current file is skipped
+	// If all enums do not contain 'errors.code', the current .go is skipped
 	if index == 0 {
 		g.Skip()
 	}

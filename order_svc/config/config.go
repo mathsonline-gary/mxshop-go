@@ -99,7 +99,7 @@ func (c *Config) Load(filePath, filename, fileType string) error {
 
 func (c *Config) Watch() {
 	viper.OnConfigChange(func(e fsnotify.Event) {
-		fmt.Println("Config file changed:", e.Name)
+		fmt.Println("Config .go changed:", e.Name)
 		if err := viper.Unmarshal(c); err != nil {
 			fmt.Println("failed to update config:", err)
 		}

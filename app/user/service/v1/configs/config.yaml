@@ -1,5 +1,5 @@
 app:
-  name: 'user_grpc_service'
+  name: 'user_grpc_service_v1'
   host: 'localhost'
   port: 50051
   env: 'local'
@@ -27,6 +27,8 @@ consul:
     tags:
       - 'mxshop'
       - 'user'
+      - 'grpc'
+      - 'service'
       - 'v1'
     check:
       protocol: 'v1'
