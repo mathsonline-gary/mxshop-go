@@ -18,7 +18,7 @@ import (
 
 func newApp(conf *config.Config) (*app.App, func(), error) {
 	// Build endpoint.
-	endpoint, err := url.Parse(fmt.Sprintf("https://%s:%d", conf.Server.HTTP.Host, conf.Server.HTTP.Port))
+	endpoint, err := url.Parse(fmt.Sprintf("%s://%s:%d", conf.Server.HTTP.Scheme, conf.Server.HTTP.Host, conf.Server.HTTP.Port))
 	if err != nil {
 		return nil, nil, err
 	}
@@ -50,10 +50,10 @@ func newApp(conf *config.Config) (*app.App, func(), error) {
 		return nil, cleanup, err
 	}
 	check := &consulapi.AgentServiceCheck{
-		HTTP:                           fmt.Sprintf("http://%s:%d/health", conf.Registry.Check.Endpoint, conf.Server.HTTP.Port),
+		HTTP:                           conf.Registry.Check.Endpoint,
 		Timeout:                        fmt.Sprintf("%ds", conf.Registry.Check.Timeout),
 		Interval:                       fmt.Sprintf("%ds", conf.Registry.Check.Interval),
-		DeregisterCriticalServiceAfter: fmt.Sprintf("%dm", conf.Registry.Check.DeregisterAfter),
+		DeregisterCriticalServiceAfter: fmt.Sprintf("%dm", conf.Registry.Check.DeregisterAfter/60),
 	}
 	registrar := consul.New(
 		client,

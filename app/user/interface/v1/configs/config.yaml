@@ -4,6 +4,7 @@ app:
 
 server:
   http:
+    scheme: 'http'
     host: 'localhost'
     port: 8080
 
@@ -18,7 +19,6 @@ registry:
   driver: 'consul'
   host: 'localhost'
   port: 8500
-  schema: 'http'
   name: 'user_http_interface_v1'
   tags:
     - 'mxshop'
@@ -28,7 +28,7 @@ registry:
     - 'v1'
   check:
     protocol: 'v1'
-    endpoint: 'host.docker.internal'
+    endpoint: 'http://host.docker.internal:8080/health'
     interval: 10
     timeout: 5
-    deregister_after: 1
+    deregister_after: 60

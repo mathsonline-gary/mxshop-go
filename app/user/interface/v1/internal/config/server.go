@@ -5,6 +5,7 @@ type Server struct {
 }
 
 type ServerHTTP struct {
-	Host string `mapstructure:"host"`
-	Port uint32 `mapstructure:"port"`
+	Scheme string `mapstructure:"scheme"`
+	Host   string `mapstructure:"host"`
+	Port   uint32 `mapstructure:"port"`
 }

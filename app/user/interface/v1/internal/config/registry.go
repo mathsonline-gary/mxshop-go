@@ -6,7 +6,6 @@ type Registry struct {
 	Driver string        `mapstructure:"driver"`
 	Host   string        `mapstructure:"host"`
 	Port   uint32        `mapstructure:"port"`
-	Schema string        `mapstructure:"schema"`
 	Name   string        `mapstructure:"name"`
 	Tags   []string      `mapstructure:"tags"`
 	Check  RegistryCheck `mapstructure:"check"`
