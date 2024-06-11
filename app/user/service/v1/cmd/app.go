@@ -18,7 +18,7 @@ import (
 
 func newApp(conf config.Config) (*app.App, error) {
 	// Build endpoint.
-	endpoint, err := url.Parse(fmt.Sprintf("%s:%d", conf.App.Host, conf.App.Port))
+	endpoint, err := url.Parse(fmt.Sprintf("grpc://%s:%d", conf.App.Host, conf.App.Port))
 	if err != nil {
 		return nil, err
 	}

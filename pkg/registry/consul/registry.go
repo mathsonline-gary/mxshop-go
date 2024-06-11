@@ -2,8 +2,6 @@ package consul
 
 import (
 	"context"
-	"net/url"
-	"strconv"
 
 	"github.com/hashicorp/consul/api"
 	"github.com/zycgary/mxshop-go/pkg/registry"
@@ -39,22 +37,13 @@ func WithCheck(check *api.AgentServiceCheck) Option {
 }
 
 func (r registrar) Register(_ context.Context, instance *registry.Instance) error {
-	addresses := make(map[string]api.ServiceAddress, len(instance.Endpoints))
-	for _, endpoint := range instance.Endpoints {
-		raw, err := url.Parse(endpoint)
-		if err != nil {
-			return err
-		}
-		port, _ := strconv.ParseUint(raw.Port(), 10, 16)
-		addresses[raw.Scheme] = api.ServiceAddress{Address: endpoint, Port: int(port)}
-	}
-
 	registration := &api.AgentServiceRegistration{
-		Name:            instance.Name,
-		ID:              instance.ID,
-		Tags:            instance.Tags,
-		Meta:            instance.Metadata,
-		TaggedAddresses: addresses,
+		Name:    instance.Name,
+		ID:      instance.ID,
+		Address: instance.Address,
+		Port:    instance.Port,
+		Tags:    instance.Tags,
+		Meta:    instance.Metadata,
 	}
 
 	if len(r.checks) > 0 {

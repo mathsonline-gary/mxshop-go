@@ -5,6 +5,7 @@ import (
 	"errors"
 	"os"
 	"os/signal"
+	"strconv"
 	"sync"
 	"syscall"
 	"time"
@@ -155,11 +156,17 @@ func (a *App) Stop() error {
 }
 
 func (a *App) buildInstance() (*registry.Instance, error) {
+	port, err := strconv.Atoi(a.opts.endpoint.Port())
+	if err != nil {
+		return nil, err
+	}
+
 	return &registry.Instance{
-		ID:        a.opts.id,
-		Name:      a.opts.name,
-		Tags:      a.opts.tags,
-		Metadata:  a.opts.metadata,
-		Endpoints: []string{a.opts.endpoint.String()},
+		ID:       a.opts.id,
+		Name:     a.opts.name,
+		Tags:     a.opts.tags,
+		Metadata: a.opts.metadata,
+		Address:  a.opts.endpoint.Hostname(),
+		Port:     port,
 	}, nil
 }
