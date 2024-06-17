@@ -28,7 +28,7 @@ func NewData(conf *config.Data, logger log.Logger) (*Data, func(), error) {
 		grpc.WithDefaultServiceConfig(`{"loadBalancingPolicy": "round_robin"}`),
 	)
 	if err != nil {
-		data.logger.Debugf("did not connect: %v", err)
+		data.logger.Fatalf("did not connect: %v", err)
 	}
 	cleanup := func() {
 		_ = conn.Close()

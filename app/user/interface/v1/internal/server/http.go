@@ -2,7 +2,9 @@ package server
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/config"
@@ -15,6 +17,7 @@ var _ transport.Server = (*httpServer)(nil)
 
 type httpServer struct {
 	engine *gin.Engine
+	server *http.Server
 	Host   string
 	Port   uint32
 	us     service.UserService
@@ -48,13 +51,25 @@ func NewHttpServer(conf *config.Config, us *service.UserService, logger log.Logg
 }
 
 func (s *httpServer) Start(_ context.Context) error {
-	s.logger.Debugf("Starting HTTP server at %s:%d", s.Host, s.Port)
-	return s.engine.Run(fmt.Sprintf("%s:%d", s.Host, s.Port))
+	s.logger.Infof("Starting HTTP server at %s:%d", s.Host, s.Port)
+
+	s.server = &http.Server{
+		Addr:    fmt.Sprintf("%s:%d", s.Host, s.Port),
+		Handler: s.engine.Handler(),
+	}
+
+	if err := s.server.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
+		return err
+	}
+
+	return nil
 }
 
-func (s *httpServer) Stop(_ context.Context) error {
-	s.logger.Debugf("Stopping HTTP server")
+func (s *httpServer) Stop(ctx context.Context) error {
+	s.logger.Infof("Stopping HTTP server")
 
-	// TODO: Graceful shutdown
+	if err := s.server.Shutdown(ctx); err != nil {
+		return err
+	}
 	return nil
 }

@@ -38,7 +38,7 @@ func (s *UserService) Index(ctx *gin.Context) {
 	// Call use case.
 	ul, err := s.uuc.GetList(ctx, int32(p), int32(ps))
 	if err != nil {
-		s.logger.Debugf("[HTTP] [GetList]: %v", err)
+		s.logger.Errorf("[HTTP] [GetList]: %v", err)
 		ctx.JSON(500, gin.H{
 			"error": err.Error(),
 		})

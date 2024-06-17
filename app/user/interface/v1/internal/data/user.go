@@ -28,7 +28,7 @@ func (r *userRepository) GetList(ctx context.Context, page, pageSize int32) (*lo
 		PageSize: uint32(pageSize),
 	})
 	if err != nil {
-		r.logger.Debugf("[Repository] [GetList]: %v", err)
+		r.logger.Errorf("[Repository] [GetList]: %v", err)
 		return nil, err
 	}
 
