@@ -21,14 +21,16 @@ type httpServer struct {
 	Host   string
 	Port   uint32
 	us     service.UserService
+	as     service.AuthService
 	logger *log.Sugar
 }
 
-func NewHttpServer(conf *config.Config, us *service.UserService, logger log.Logger) transport.Server {
+func NewHttpServer(conf *config.Config, us *service.UserService, as *service.AuthService, logger log.Logger) transport.Server {
 	s := &httpServer{
 		Host:   conf.Server.HTTP.Host,
 		Port:   conf.Server.HTTP.Port,
 		us:     *us,
+		as:     *as,
 		logger: log.NewSugar(logger),
 	}
 
@@ -42,6 +44,11 @@ func NewHttpServer(conf *config.Config, us *service.UserService, logger log.Logg
 		})
 	})
 	rg := r.Group("/v1")
+
+	// Login route
+	rg.POST("/login", s.as.Login)
+
+	// User routes
 	users := rg.Group("/users")
 	users.GET("/", s.us.Index)
 

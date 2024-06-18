@@ -7,7 +7,10 @@ import (
 )
 
 type User struct {
+	ID       uint64 `json:"id,omitempty"`
 	Nickname string `json:"name,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Password string `json:"password,omitempty"`
 }
 
 type UserList struct {
@@ -17,6 +20,7 @@ type UserList struct {
 
 type UserRepository interface {
 	Index(ctx context.Context, page, pageSize int32) (*UserList, error)
+	GetByEmail(ctx context.Context, email string) (*User, error)
 }
 
 type UserUseCase struct {
@@ -32,10 +36,9 @@ func NewUserUseCase(ur UserRepository, logger log.Logger) *UserUseCase {
 }
 
 func (us *UserUseCase) GetList(ctx context.Context, page, pageSize int32) (*UserList, error) {
-	ul, err := us.userRepository.Index(ctx, page, pageSize)
-	if err != nil {
-		return nil, err
-	}
+	return us.userRepository.Index(ctx, page, pageSize)
+}
 
-	return ul, nil
+func (us *UserUseCase) GetByEmail(ctx context.Context, email string) (*User, error) {
+	return us.userRepository.GetByEmail(ctx, email)
 }

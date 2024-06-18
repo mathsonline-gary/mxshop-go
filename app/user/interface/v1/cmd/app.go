@@ -40,9 +40,11 @@ func newApp(conf *config.Config) (*app.App, func(), error) {
 
 	// Initialize GRPC server.
 	repo := data.NewUserRepository(d.UserServiceClient, logger)
-	uc := logic.NewUserUseCase(repo, logger)
-	svc := service.NewUserService(uc, logger)
-	s := server.NewHttpServer(conf, svc, logger)
+	uuc := logic.NewUserUseCase(repo, logger)
+	auc := logic.NewAuthUseCase(conf.Auth.Secret, repo, logger)
+	us := service.NewUserService(uuc, logger)
+	as := service.NewAuthService(auc, logger)
+	s := server.NewHttpServer(conf, us, as, logger)
 
 	// Initialize service registrar.
 	client, err := consulapi.NewClient(consulapi.DefaultConfig())

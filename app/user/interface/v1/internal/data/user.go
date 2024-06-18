@@ -35,10 +35,44 @@ func (r *userRepository) GetList(ctx context.Context, page, pageSize int32) (*lo
 	var ul logic.UserList
 	ul.Total = rsp.Total
 	for _, v := range rsp.Data {
-		ul.Data = append(ul.Data, &logic.User{
+		ul.Data = append(ul.Data, &logic.SafeUser{
+			ID:       v.Id,
 			Nickname: v.Nickname,
+			Email:    v.Email,
 		})
 	}
 
 	return &ul, nil
+}
+
+func (r *userRepository) GetUserByEmail(ctx context.Context, email string) (*logic.User, error) {
+	rsp, err := r.usc.GetUserByEmail(ctx, &v1.EmailRequest{
+		Email: email,
+	})
+	if err != nil {
+		r.logger.Errorf("[UserRepository] [GetUserByEmail]: %v", err)
+		return nil, err
+	}
+
+	return &logic.User{
+		SafeUser: logic.SafeUser{
+			ID:       rsp.Data.Id,
+			Email:    rsp.Data.Email,
+			Nickname: rsp.Data.Nickname,
+		},
+		Password: rsp.Data.Password,
+	}, nil
+}
+
+func (r *userRepository) CheckPassword(ctx context.Context, password, encryptedPassword string) (bool, error) {
+	rsp, err := r.usc.CheckPassword(ctx, &v1.CheckPasswordRequest{
+		Password:          password,
+		EncryptedPassword: encryptedPassword,
+	})
+	if err != nil {
+		r.logger.Errorf("[UserRepository] [CheckPassword]: %v", err)
+		return false, err
+	}
+
+	return rsp.Success, nil
 }

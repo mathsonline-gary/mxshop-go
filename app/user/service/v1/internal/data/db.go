@@ -19,7 +19,7 @@ type User struct {
 	model.Timestamps
 	model.SoftDelete
 
-	Mobile   string     `gorm:"index;unique;type:varchar(11);not null"`
+	Email    string     `gorm:"index;unique;type:varchar(255);not null"`
 	Password string     `gorm:"type:varchar(100);not null"`
 	Nickname string     `gorm:"type:varchar(20);"`
 	Birthday *time.Time `gorm:"type:datetime"`
@@ -55,7 +55,7 @@ func NewDB(conf config.DB, logger log.Logger) (*gorm.DB, error) {
 
 	// Auto migrate models
 	if err := db.AutoMigrate(&User{}); err != nil {
-		ls.Debugf("AutoMigrate: %s", err)
+		ls.Fatalf("AutoMigrate: %s", err)
 	}
 
 	return db, nil

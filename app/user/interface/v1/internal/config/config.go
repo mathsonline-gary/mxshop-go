@@ -12,6 +12,7 @@ type Config struct {
 	Server   *Server   `mapstructure:"server"`
 	Data     *Data     `mapstructure:"data"`
 	Registry *Registry `mapstructure:"registry"`
+	Auth     *Auth     `mapstructure:"auth"`
 }
 
 func (c *Config) Load(filePath string) error {

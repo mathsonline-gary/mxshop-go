@@ -24,7 +24,6 @@ func (s *UserService) Index(ctx *gin.Context) {
 	page := ctx.DefaultQuery("page", "1")
 	pageSize := ctx.DefaultQuery("page_size", "10")
 
-	s.logger.Debugf("[HTTP] [GetList]: page: %s, page_size: %s", page, pageSize)
 	p, err := strconv.Atoi(page)
 	if err != nil {
 		p = 1
@@ -38,15 +37,19 @@ func (s *UserService) Index(ctx *gin.Context) {
 	// Call use case.
 	ul, err := s.uuc.GetList(ctx, int32(p), int32(ps))
 	if err != nil {
-		s.logger.Errorf("[HTTP] [GetList]: %v", err)
 		ctx.JSON(500, gin.H{
-			"error": err.Error(),
+			"error":   true,
+			"message": "Internal Server Error",
 		})
 		return
 	}
 
 	ctx.JSON(200, gin.H{
-		"total": ul.Total,
-		"data":  ul.Data,
+		"error":   false,
+		"message": "success",
+		"data": map[string]any{
+			"total": ul.Total,
+			"data":  ul.Data,
+		},
 	})
 }

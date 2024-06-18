@@ -7,7 +7,7 @@ option go_package = ".;v1";
 service UserService {
   rpc GetUserList(GetUserListRequest) returns (UserListResponse) {}
   rpc GetUserById(IdRequest) returns (UserInfoResponse) {}
-  rpc GetUserByMobile(MobileRequest) returns (UserInfoResponse) {}
+  rpc GetUserByEmail(EmailRequest) returns (UserInfoResponse) {}
   rpc CreateUser(CreateUserRequest) returns (UserInfoResponse) {}
   rpc UpdateUser(UpdateUserRequest) returns (google.protobuf.Empty) {}
   rpc CheckPassword(CheckPasswordRequest) returns (CheckPasswordResponse) {}
@@ -27,14 +27,14 @@ message IdRequest {
   uint32 id = 1;
 }
 
-message MobileRequest {
-  string mobile = 1;
+message EmailRequest {
+  string email = 1;
 }
 
 message UserInfo {
   uint64 id = 1;
   string password = 2;
-  string mobile = 3;
+  string email = 3;
   string nickname = 4;
   uint64 birthday = 5;
   int32 gender = 6;
@@ -48,7 +48,7 @@ message  UserInfoResponse {
 message CreateUserRequest {
   string nickname = 1;
   string password = 2;
-  string mobile = 3;
+  string email = 3;
 }
 
 message UpdateUserRequest {
@@ -65,9 +65,4 @@ message CheckPasswordRequest {
 
 message CheckPasswordResponse {
   bool success = 1;
-}
-
-enum Error {
-  USER_NOT_FOUND = 0;
-  USER_EXISTS = 1;
 }

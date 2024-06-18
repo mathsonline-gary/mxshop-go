@@ -32,3 +32,6 @@ registry:
     interval: 10
     timeout: 5
     deregister_after: 60
+
+auth:
+  secret: 'mxshop'

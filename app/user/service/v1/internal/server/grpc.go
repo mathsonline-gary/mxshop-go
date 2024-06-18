@@ -34,7 +34,7 @@ func NewGRPCServer(conf config.Server, controller pbv1.UserServiceServer, logger
 		port:    conf.Port,
 	}
 
-	s.logger.Debugf("Registering gRPC server")
+	s.logger.Info("Registering gRPC server")
 
 	pbv1.RegisterUserServiceServer(s, controller)
 	grpc_health_v1.RegisterHealthServer(s, health.NewServer())

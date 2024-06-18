@@ -5,7 +5,6 @@ import (
 
 	usv1 "github.com/zycgary/mxshop-go/app/user/service/v1/internal/logic"
 	"github.com/zycgary/mxshop-go/pkg/log"
-	"github.com/zycgary/mxshop-go/user_svc/model"
 	"gorm.io/gorm"
 )
 
@@ -25,7 +24,7 @@ func NewUserRepository(db *gorm.DB, logger log.Logger) usv1.UserRepository {
 
 func (ur *userRepository) Index(ctx context.Context, page, pageSize int32) (*usv1.UserList, error) {
 	var total int64
-	if err := ur.db.Model(&model.User{}).Count(&total).Error; err != nil {
+	if err := ur.db.Model(&usv1.User{}).Count(&total).Error; err != nil {
 		return nil, err
 	}
 	if total == 0 {
@@ -45,12 +44,24 @@ func (ur *userRepository) Index(ctx context.Context, page, pageSize int32) (*usv
 	}
 	for _, v := range users {
 		userInfo := &usv1.User{
+			ID:       uint64(v.ID),
 			Nickname: v.Nickname,
+			Email:    v.Email,
 		}
 		ul.Data = append(ul.Data, userInfo)
 	}
 
 	return ul, nil
+}
+
+func (ur *userRepository) GetByEmail(ctx context.Context, email string) (*usv1.User, error) {
+	var user usv1.User
+	if err := ur.db.Where("email = ?", email).Find(&user).Limit(1).Error; err != nil {
+		ur.logger.Errorf("[UserRepository] [GetByEmail]: %v", err)
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func paginate(page, pageSize int32) func(db *gorm.DB) *gorm.DB {
