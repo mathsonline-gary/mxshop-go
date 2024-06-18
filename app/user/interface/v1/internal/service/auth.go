@@ -2,29 +2,35 @@ package service
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/logic"
 	"github.com/zycgary/mxshop-go/pkg/log"
 )
 
 type AuthService struct {
-	auc    *logic.AuthUseCase
-	logger *log.Sugar
+	auc       *logic.AuthUseCase
+	validator *validator.Validate
+	logger    *log.Sugar
 }
 
 func NewAuthService(auc *logic.AuthUseCase, logger log.Logger) *AuthService {
 	return &AuthService{
-		auc:    auc,
-		logger: log.NewSugar(logger),
+		auc:       auc,
+		validator: validator.New(),
+		logger:    log.NewSugar(logger),
 	}
 }
 
 func (s *AuthService) Login(ctx *gin.Context) {
 	var req struct {
-		Email    string `json:"email"`
-		Password string `json:"password"`
+		Email    string `json:"email,omitempty" validate:"required,email,min=3,max=255"`
+		Password string `json:"password,omitempty" validate:"required,min=6,max=255"`
 	}
+
+	// Bind request.
 	if err := ctx.Bind(&req); err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"error":   true,
@@ -32,38 +38,14 @@ func (s *AuthService) Login(ctx *gin.Context) {
 		})
 		return
 	}
+	req.Email = strings.TrimSpace(req.Email)
+	req.Password = strings.TrimSpace(req.Password)
 
-	// Validate email: required, email format, length 3-255
-	if req.Email == "" {
+	// Validate request.
+	if err := s.validator.Struct(&req); err != nil {
 		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
 			"error":   true,
-			"message": "Email is required.",
-		})
-		return
-	}
-
-	// TODO: Validate email format
-
-	if len(req.Email) < 3 || len(req.Email) > 255 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-			"error":   true,
-			"message": "Email length must be between 3 and 255.",
-		})
-		return
-	}
-
-	// Validate password: required, length 6-255
-	if req.Password == "" {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-			"error":   true,
-			"message": "Password is required.",
-		})
-		return
-	}
-	if len(req.Password) < 6 || len(req.Password) > 255 {
-		ctx.JSON(http.StatusUnprocessableEntity, gin.H{
-			"error":   true,
-			"message": "Password length must be between 6 and 255.",
+			"message": "Invalid request.",
 		})
 		return
 	}
