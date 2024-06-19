@@ -8,7 +8,7 @@ import (
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/config"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/data"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/logic"
-	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/server"
+	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/server/http"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/service"
 	"github.com/zycgary/mxshop-go/pkg/app"
 	zaplog "github.com/zycgary/mxshop-go/pkg/log/zap"
@@ -44,7 +44,7 @@ func newApp(conf *config.Config) (*app.App, func(), error) {
 	auc := logic.NewAuthUseCase(conf.Auth.Secret, repo, logger)
 	us := service.NewUserService(uuc, logger)
 	as := service.NewAuthService(auc, logger)
-	s := server.NewHttpServer(conf, us, as, logger)
+	s := http.NewHttpServer(conf, us, as, logger)
 
 	// Initialize service registrar.
 	client, err := consulapi.NewClient(consulapi.DefaultConfig())

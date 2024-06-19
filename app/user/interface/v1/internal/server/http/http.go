@@ -1,4 +1,4 @@
-package server
+package http
 
 import (
 	"context"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/config"
+	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/server/http/middleware"
 	"github.com/zycgary/mxshop-go/app/user/interface/v1/internal/service"
 	"github.com/zycgary/mxshop-go/pkg/log"
 	"github.com/zycgary/mxshop-go/pkg/transport"
@@ -50,7 +51,7 @@ func NewHttpServer(conf *config.Config, us *service.UserService, as *service.Aut
 
 	// User routes
 	users := rg.Group("/users")
-	users.GET("/", s.us.Index)
+	users.Use(middleware.JWT(conf.Auth.Secret)).GET("/", s.us.Index)
 
 	s.engine = r
 

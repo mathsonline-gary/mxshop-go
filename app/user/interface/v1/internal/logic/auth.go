@@ -44,7 +44,7 @@ func (uc *AuthUseCase) Login(ctx context.Context, email, password string) (strin
 
 	// Generate JWT token.
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"sub": user.ID,
+		"id":  user.ID,
 		"exp": time.Now().Add(time.Minute * 30).Unix(),
 	})
 	tokenString, err := token.SignedString([]byte(uc.secret))
